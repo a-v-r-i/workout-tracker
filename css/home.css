@@ -1,0 +1,166 @@
+/* ==========================================================================
+   home.css — only what the Home view needs on top of the design system.
+   Everything reusable (.card, .chip, .btn, .list-row, .badge) lives in
+   style.css; nothing here should be worth promoting into it.
+   ========================================================================== */
+
+/* The view is one vertical stack; .stack handles the rhythm, these two just
+   want a little more air than the default 12px. */
+.home > .home-pain,
+.home > section {
+  margin-top: var(--s-6);
+}
+
+.home-head {
+  margin-bottom: var(--s-2);
+}
+.home-date {
+  margin-top: 2px;
+}
+
+/* -------------------------------------------------------------- resume banner */
+
+.home-resume .card-sub {
+  color: var(--text);
+  opacity: 0.8;
+}
+/* Resume is the primary action, Discard is deliberately the smaller of the two. */
+.home-resume .btn-row > .btn--ghost {
+  flex: 0 0 auto;
+}
+
+/* --------------------------------------------------------------- pain check-in */
+
+/* 11 chips have to fit a 375px screen without a horizontal scroller and
+   without dropping below the 48px touch target, so they share the row evenly
+   and lose their pill padding instead of their height. */
+.pain-row {
+  gap: 6px;
+}
+.pain-chip {
+  flex: 1 1 calc((100% - 60px) / 6);
+  min-width: 0;
+  padding: 0;
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  border-radius: var(--r-md);
+}
+
+/* Unselected chips carry only a hint of their band: a tinted border and a
+   barely-there wash. The scale should read at a glance without turning the
+   high end into an alarm. */
+.pain-chip--low {
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--border-strong));
+}
+.pain-chip--mid {
+  border-color: color-mix(in srgb, var(--pain) 34%, var(--border-strong));
+}
+.pain-chip--high {
+  border-color: color-mix(in srgb, var(--danger) 34%, var(--border-strong));
+}
+
+.pain-chip--low[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-on-accent);
+}
+.pain-chip--mid[aria-pressed='true'] {
+  background: var(--pain);
+  border-color: var(--pain);
+  color: #241703;
+}
+.pain-chip--high[aria-pressed='true'] {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #2a0d0b;
+}
+
+.pain-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--s-2);
+}
+
+/* Nudge, not a buzzer: a short sway when someone taps a session before saying
+   how the back is. Reduced-motion users get the toast and nothing else. */
+.pain-row.is-nudging {
+  animation: pain-nudge 0.42s ease-in-out;
+}
+@keyframes pain-nudge {
+  0%, 100% { transform: translateX(0); }
+  22% { transform: translateX(-5px); }
+  55% { transform: translateX(5px); }
+  80% { transform: translateX(-2px); }
+}
+
+/* --------------------------------------------------------------- suggestion */
+
+.home-suggestion {
+  font-size: 15px;
+  line-height: 1.45;
+  margin-bottom: var(--s-3);
+}
+
+/* ------------------------------------------------------------ session picker */
+
+.routine-row {
+  min-height: 62px;
+}
+.routine-row[disabled] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.routine-row .list-row-end {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 45%;
+  gap: 6px;
+}
+
+/* ------------------------------------------------------------- weight sheet */
+
+.weight-field {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+.weight-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
+  padding: 0 var(--s-4);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  color: var(--text);
+  font-size: 24px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.weight-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+/* Chrome's number spinners are a 20px tap target next to a 56px field. */
+.weight-input::-webkit-outer-spin-button,
+.weight-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.weight-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.weight-unit {
+  flex-shrink: 0;
+  font-size: 17px;
+  font-weight: 650;
+  color: var(--text-secondary);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.home-foot {
+  margin-top: var(--s-6);
+}
