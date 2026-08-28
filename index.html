@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111418">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Backbone — a back-pain-aware workout tracker.">
+  <title>Backbone</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="icon" href="./icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Backbone">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <!-- Router mounts the active view here. Views own everything inside. -->
+  <main id="view" class="view"></main>
+
+  <!-- Bottom tab bar. app.js sets aria-current="page" on the active tab. -->
+  <nav id="tabbar" class="tabbar" aria-label="Main">
+    <a class="tab" href="#/home" data-route="home">
+      <svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 11.2 12 4l8 7.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 10.5V20h12v-9.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="tab-label">Home</span>
+    </a>
+    <a class="tab" href="#/history" data-route="history">
+      <svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.9"/>
+        <path d="M12 7.4V12l3.4 2.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="tab-label">History</span>
+    </a>
+    <a class="tab" href="#/settings" data-route="settings">
+      <svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="2.9" fill="none" stroke="currentColor" stroke-width="1.9"/>
+        <path d="M12 3.2v2.3M12 18.5v2.3M4.8 12H2.5M21.5 12h-2.3M6.9 6.9 5.3 5.3M18.7 18.7l-1.6-1.6M17.1 6.9l1.6-1.6M5.3 18.7l1.6-1.6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+      <span class="tab-label">Settings</span>
+    </a>
+  </nav>
+
+  <!-- Toast host: app.js appends .toast children here. -->
+  <div id="toast" class="toast-host" role="status" aria-live="polite"></div>
+
+  <!-- Bottom-sheet root: app.js fills .sheet-panel and toggles [hidden]. -->
+  <div id="sheet" class="sheet-root" hidden>
+    <div class="sheet-backdrop" data-sheet-close></div>
+    <div class="sheet-panel" role="dialog" aria-modal="true">
+      <div class="sheet-grip" data-sheet-close aria-hidden="true"></div>
+      <div class="sheet-body"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
