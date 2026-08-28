@@ -1,0 +1,175 @@
+/* ==========================================================================
+   history.css — styles owned by js/views/history.js only.
+   Injected by that module at load, so it never costs anything on other routes.
+   Everything here builds on the tokens + components in css/style.css; nothing
+   in this file redefines a shared class.
+   ========================================================================== */
+
+/* Section wrapper: .section-title + one card. */
+.hist-section { display: block; }
+
+/* Sub-line under a section heading, inside the card, above its chart. */
+.hist-sub {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-bottom: var(--s-3);
+}
+
+/* Soft placeholder for a section with nothing to draw yet. Warm, not empty. */
+.hist-ghost {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+  padding: var(--s-2) 0;
+}
+
+/* --------------------------------------------------------------------------
+   1. Header stats — three numbers on one line at 375px
+   -------------------------------------------------------------------------- */
+.hist-stats {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-3);
+}
+.hist-stat { flex: 1; min-width: 0; text-align: center; }
+.hist-stat-num {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.hist-stat-label {
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+.hist-stat-sep { width: 1px; background: var(--border); flex: 0 0 1px; }
+
+/* --------------------------------------------------------------------------
+   2-4. Charts
+   -------------------------------------------------------------------------- */
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font-family: var(--font-num); }
+
+/* Exercise picker: one horizontal scroll lane, deliberately one chart at a
+   time. Scrollbar hidden — the row is snap-scrolled by thumb. */
+.hist-picker {
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* Bleed to the card edges so chips can scroll fully out of sight. */
+  margin: calc(var(--s-1) * -1) calc(var(--s-4) * -1) var(--s-4);
+  padding: var(--s-1) var(--s-4);
+  scroll-snap-type: x proximity;
+}
+.hist-picker::-webkit-scrollbar { display: none; }
+.hist-chip {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  font-size: 14px;
+  padding: 0 var(--s-3);
+  min-width: 0;
+}
+.hist-chart-host { display: block; }
+
+/* --------------------------------------------------------------------------
+   5. Session rows
+   -------------------------------------------------------------------------- */
+.hist-row { align-items: center; }
+.hist-row-date {
+  flex: 0 0 52px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+.hist-row-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.hist-row-title > span:first-child { min-width: 0; }
+
+/* Pain readout: a colored dot plus the number. Amber and red here are labels,
+   not warnings — no border, no fill, nothing that reads as an alert. */
+.hist-pain {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text-secondary);
+}
+.hist-pain-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 9px;
+}
+.hist-pain--good { color: var(--success); }
+.hist-pain--mid  { color: var(--pain); }
+.hist-pain--high { color: var(--danger); }
+.hist-pain--none { color: var(--text-tertiary); }
+
+/* --------------------------------------------------------------------------
+   6. Detail sheet
+   -------------------------------------------------------------------------- */
+.hist-detail-date {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: calc(var(--s-2) * -1);
+  margin-bottom: var(--s-3);
+}
+.hist-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+
+.hist-entry { padding: var(--s-3) 0; }
+.hist-entry + .hist-entry { border-top: 1px solid var(--border); }
+.hist-entry-title { font-size: 15px; font-weight: 650; }
+.hist-entry-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+/* Swap note: prose, so it deliberately keeps the UI font (the rounded numeral
+   face mangles the arrow glyph). */
+.hist-entry-swap {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+.hist-entry.is-dim { opacity: 0.5; }
+.hist-entry.is-dim .hist-entry-title { font-weight: 600; }
+
+.hist-note {
+  margin-top: var(--s-4);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.hist-note-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-1);
+}
+
+.hist-close { margin-top: var(--s-5); }
