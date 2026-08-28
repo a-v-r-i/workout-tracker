@@ -1,0 +1,417 @@
+/* ==========================================================================
+   workout.css — styles owned by js/views/workout.js only.
+   Everything here is prefixed .wo- so it can never collide with the design
+   system in css/style.css, which this file extends but never overrides.
+   Injected by the view module at load time.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Sticky session header. Negative margins pull it out of .view's padding so
+   it spans the full width and sits flush against the top edge when stuck.
+   -------------------------------------------------------------------------- */
+.wo-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: calc(-1 * (var(--safe-t) + var(--s-5))) calc(-1 * var(--s-4)) var(--s-5);
+  padding: calc(var(--safe-t) + var(--s-3)) var(--s-4) var(--s-3);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.wo-header-main { flex: 1; min-width: 0; }
+.wo-header-title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: 16px;
+  font-weight: 650;
+}
+.wo-header-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wo-elapsed {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   Exercise card. The head is a button (tap anywhere to expand); the ⋯ menu is
+   a sibling, never nested inside it.
+   -------------------------------------------------------------------------- */
+.wo-card {
+  padding: 0;
+  overflow: hidden;
+  scroll-margin-top: 76px;   /* clears the sticky header on scrollIntoView */
+  transition: opacity 0.16s ease, border-color 0.16s ease;
+}
+.wo-card + .wo-card { margin-top: var(--s-2); }
+
+.wo-card-bar { display: flex; align-items: stretch; }
+
+.wo-card-head {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-2) var(--s-3) var(--s-4);
+  min-height: var(--tap);
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.wo-card-head:active { background: var(--elevated); }
+
+/* Status dot / checkmark on the left of every card. */
+.wo-card-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  color: var(--text-on-accent);
+  font-size: 13px;
+  line-height: 1;
+}
+.wo-card.is-done .wo-card-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.wo-card.is-skipped .wo-card-check {
+  background: var(--elevated-2);
+  border-color: var(--border-strong);
+  color: var(--text-tertiary);
+}
+
+.wo-card-main { flex: 1; min-width: 0; }
+.wo-card-name {
+  display: block;
+  font-size: 16px;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wo-card-meta {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.wo-card-end { flex-shrink: 0; display: flex; align-items: center; gap: var(--s-2); }
+
+/* Chevron rotates when the card is open. */
+.wo-chev {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--text-tertiary);
+  transition: transform 0.18s ease;
+}
+.wo-card[data-open="true"] .wo-chev { transform: rotate(180deg); }
+
+.wo-more {
+  flex-shrink: 0;
+  width: var(--tap);
+  min-height: var(--tap);
+  border: 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.wo-more:active { background: var(--elevated); }
+
+.wo-card-body { padding: 0 var(--s-4) var(--s-4); }
+.wo-card[data-open="false"] .wo-card-body { display: none; }
+
+/* Done and skipped cards recede without disappearing. */
+.wo-card.is-done { opacity: 0.62; }
+.wo-card.is-done .wo-card-name { color: var(--text-secondary); }
+.wo-card.is-skipped { opacity: 0.5; }
+.wo-card.is-skipped .wo-card-name { text-decoration: line-through; }
+/* An open card is always fully legible, done or not. */
+.wo-card[data-open="true"] { opacity: 1; }
+.wo-card[data-open="true"].is-done { border-color: var(--accent-dim); }
+
+.wo-cues {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin-bottom: var(--s-3);
+}
+.wo-notice {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--pain);
+  background: var(--pain-wash);
+  border-radius: var(--r-sm);
+  padding: var(--s-2) var(--s-3);
+  margin-bottom: var(--s-3);
+}
+.wo-dose {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: var(--s-3);
+}
+
+/* --------------------------------------------------------------------------
+   Set list (strength / core reps)
+   -------------------------------------------------------------------------- */
+.wo-setlist {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin-bottom: var(--s-3);
+}
+.wo-set-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 44px;
+  padding: var(--s-2) var(--s-3);
+  font-size: 15px;
+}
+.wo-set-row + .wo-set-row { border-top: 1px solid var(--border); }
+.wo-set-num {
+  flex-shrink: 0;
+  min-width: 46px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.wo-set-val { flex: 1; font-variant-numeric: tabular-nums; font-weight: 600; }
+.wo-set-row.is-logged { background: var(--accent-wash); }
+.wo-set-row.is-logged .wo-set-num { color: var(--accent); }
+.wo-set-row.is-next .wo-set-val { color: var(--text); }
+.wo-set-row.is-pending { color: var(--text-tertiary); }
+.wo-set-row.is-pending .wo-set-val { font-weight: 500; }
+.wo-set-tick { color: var(--accent); font-size: 14px; }
+.wo-set-undo {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0 var(--s-2);
+  border: 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+/* Stepper pair: [ label / stepper ] [ label / stepper ] */
+.wo-adjust {
+  display: flex;
+  gap: var(--s-3);
+  margin-bottom: var(--s-3);
+}
+.wo-adjust-field { flex: 1; min-width: 0; }
+.wo-adjust-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-1);
+}
+.wo-adjust .stepper { display: flex; width: 100%; }
+/* Narrower arrows here than in Settings: two steppers share one 375px row,
+   and "60 kg" must never wrap onto a second line. */
+.wo-adjust .stepper button { width: 42px; }
+.wo-adjust .stepper-value {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.wo-actions { display: flex; gap: var(--s-2); }
+.wo-actions > .btn { flex: 1; }
+.wo-actions > .btn.wo-btn-fixed { flex: 0 0 auto; }
+
+/* --------------------------------------------------------------------------
+   Rest / hold timer block
+   -------------------------------------------------------------------------- */
+.wo-timer {
+  margin: var(--s-4) 0 var(--s-3);
+  padding: var(--s-4) var(--s-3) var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  text-align: center;
+}
+.wo-timer .progress-ring { --ring-size: 150px; margin-bottom: var(--s-3); }
+.wo-timer-actions { display: flex; gap: var(--s-2); justify-content: center; }
+/* Three buttons share a 375px row, so let the labels stay on one line. */
+.wo-timer-actions > .btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--s-2);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Cardio
+   -------------------------------------------------------------------------- */
+.wo-field { margin-bottom: var(--s-3); }
+.wo-field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-2);
+}
+.wo-input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 var(--s-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--elevated);
+  color: var(--text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.wo-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+textarea.wo-input {
+  min-height: 92px;
+  padding: var(--s-3);
+  line-height: 1.45;
+  resize: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   Stretch sequence player — one card standing in for a whole block
+   -------------------------------------------------------------------------- */
+.wo-seq { text-align: center; padding: var(--s-5) var(--s-4); }
+.wo-seq .progress-ring { --ring-size: 196px; margin-bottom: var(--s-4); }
+.wo-seq-step {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-1);
+}
+.wo-seq-name { font-size: 21px; font-weight: 650; letter-spacing: -0.01em; }
+.wo-seq-side { color: var(--accent); }
+.wo-seq-dose {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--accent);
+  margin-top: var(--s-1);
+}
+.wo-seq-cues {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: var(--s-2) auto var(--s-4);
+  max-width: 34ch;
+}
+.wo-seq-next {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-4);
+}
+.wo-seq-actions { display: flex; gap: var(--s-2); }
+.wo-seq-actions > .btn { flex: 1; }
+.wo-seq-list {
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+.wo-seq-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-1) 0;
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+.wo-seq-item.is-current { color: var(--text); font-weight: 650; }
+.wo-seq-item.is-done { color: var(--text-secondary); }
+.wo-seq-item-mark { width: 14px; flex-shrink: 0; color: var(--accent); }
+
+/* --------------------------------------------------------------------------
+   Sheets: swap list + finish summary
+   -------------------------------------------------------------------------- */
+.wo-swap-list { margin-bottom: var(--s-3); }
+.wo-swap-check {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: var(--tap);
+  padding: var(--s-2) 0;
+  font-size: 15px;
+  cursor: pointer;
+}
+.wo-swap-check input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.wo-summary {
+  display: flex;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+.wo-summary-cell {
+  flex: 1;
+  padding: var(--s-3) var(--s-2);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.wo-summary-value {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.wo-summary-label {
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+.wo-discard {
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  margin-top: var(--s-5);
+  border: 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.wo-discard:active { color: var(--danger); }
+
+/* The pulse cue paints a background; give it something to paint on. */
+.wo-timer.pulse, .wo-seq.pulse { border-radius: var(--r-md); }
