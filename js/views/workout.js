@@ -181,6 +181,87 @@ function labelledField(label, control) {
   ]);
 }
 
+/* ------------------------------------------------------------------ how-to */
+
+/**
+ * A search page, not a fixed video: individual demos rot, and someone who does
+ * not know the movement is better served by a shelf of options than by one
+ * dead link.
+ */
+function demoSearchUrl(name, isStretch) {
+  const query = String(name || '') + (isStretch ? ' stretch how to' : ' exercise form');
+  return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(query);
+}
+
+const NO_HOWTO =
+  'No write-up saved for this one yet. The demo search below is the quickest way to see it.';
+
+/**
+ * The ⓘ sheet: what this movement actually is, in plain language.
+ *
+ * `read` is a function called at tap time rather than an object captured at
+ * build time, so a card that has been swapped explains the exercise sitting on
+ * it now instead of the one it started the session as.
+ *
+ * `onBack` turns the dismiss button into a return trip, which is what the swap
+ * sheet needs: openSheet() replaces the sheet's contents, so without it the
+ * list you were reading about would be gone.
+ */
+function openInfoSheet(read, onBack) {
+  const info = read();
+  if (!info) return;
+  const name = info.name || titleize(info.exerciseId || info.id);
+
+  openSheet(
+    el('div', {}, [
+      el('div', { class: 'sheet-title' }, [name]),
+      el('div', { class: 'wo-howto' }, [info.howTo || NO_HOWTO]),
+      info.cues
+        ? el('div', { class: 'wo-howto-tip' }, [
+            el('span', { class: 'wo-howto-tip-label' }, ['While you’re doing it']),
+            el('span', { class: 'wo-howto-tip-text' }, [info.cues]),
+          ])
+        : null,
+      el(
+        'a',
+        {
+          class: 'btn btn--ghost btn--block wo-demo-link',
+          href: demoSearchUrl(name, info.type === 'stretch'),
+          target: '_blank',
+          rel: 'noopener',
+        },
+        ['Watch a demo ↗']
+      ),
+      onBack
+        ? el('button', { class: 'btn btn--ghost btn--block', type: 'button', onclick: onBack }, [
+            'Back to alternatives',
+          ])
+        : el(
+            'button',
+            { class: 'btn btn--ghost btn--block', type: 'button', 'data-sheet-close': '' },
+            ['Close']
+          ),
+    ])
+  );
+}
+
+/** The ⓘ affordance itself. Full tap target, and it never toggles the card. */
+function infoButton(read, opts = {}) {
+  return el(
+    'button',
+    {
+      class: 'wo-info' + (opts.inline ? ' wo-info--inline' : ''),
+      type: 'button',
+      'aria-label': 'How to do ' + (opts.name || 'this exercise'),
+      onclick: (e) => {
+        e.stopPropagation();
+        openInfoSheet(read, opts.onBack);
+      },
+    },
+    ['ⓘ']
+  );
+}
+
 /* ---------------------------------------------------------------- header */
 
 function buildHeader() {
@@ -803,12 +884,14 @@ function bodyFor(item) {
 function buildCard(item, block) {
   const cardEl = el('section', { class: 'card wo-card', dataset: { uid: item.uid } });
   const headEl = el('button', { class: 'wo-card-head', type: 'button', onclick: () => toggleCard(item.uid) });
+  // Reads `item` live, so a swapped card explains what is on it now.
+  const infoEl = infoButton(() => item, { name: item.name || titleize(item.exerciseId) });
   const moreEl = el('button', {
     class: 'wo-more', type: 'button', 'aria-label': 'More options',
     onclick: () => openMoreSheet(item.uid),
   }, ['⋯']);
   const bodyEl = el('div', { class: 'wo-card-body' });
-  cardEl.append(el('div', { class: 'wo-card-bar' }, [headEl, moreEl]), bodyEl);
+  cardEl.append(el('div', { class: 'wo-card-bar' }, [headEl, infoEl, moreEl]), bodyEl);
 
   function render() {
     const status = statusOf(item);
@@ -818,6 +901,7 @@ function buildCard(item, block) {
     cardEl.dataset.open = open ? 'true' : 'false';
 
     headEl.setAttribute('aria-expanded', open ? 'true' : 'false');
+    infoEl.setAttribute('aria-label', 'How to do ' + (item.name || titleize(item.exerciseId)));
     headEl.replaceChildren(
       el('span', { class: 'wo-card-check' }, [status === 'done' ? '✓' : status === 'skipped' ? '–' : '']),
       el('span', { class: 'wo-card-main' }, [
@@ -980,6 +1064,8 @@ function renderSeq(rec) {
     const upcoming = nextHoldAfter(rec, rec.index);
     const paused = rec.player.state === 'paused';
 
+    const cur = items.find((i) => i.uid === step.meta.uid);
+
     nodes.push(
       ringEl(mmss(snap.remainingSec), step.kind === 'transition' ? 'Switch' : paused ? 'Paused' : 'Hold', 100 - snap.pct),
       el('div', { class: 'wo-seq-step' }, [`Stretch ${Math.max(1, holdNumber)} of ${total}`]),
@@ -988,10 +1074,12 @@ function renderSeq(rec) {
         step.kind === 'hold' && step.meta.side
           ? el('span', { class: 'wo-seq-side' }, [' · ' + step.meta.side])
           : null,
+        // Mid-sequence "wait, how does this one go again?". The player keeps
+        // running: Pause is right there if it is needed.
+        cur ? infoButton(() => cur, { name: cur.name, inline: true }) : null,
       ])
     );
 
-    const cur = items.find((i) => i.uid === step.meta.uid);
     if (cur && cur.measure === 'reps' && cur.reps) {
       nodes.push(el('div', { class: 'wo-seq-dose num' }, [`${cur.reps} slow reps, at your own pace`]));
     }
@@ -1159,20 +1247,29 @@ async function openSwapSheet(uid) {
     ? el(
         'div',
         { class: 'card card--flush wo-swap-list' },
+        // A row is a div, not a button, because the ⓘ sits inside it and a
+        // button cannot contain another button. Knowing what "face pull" even
+        // means is the whole point of offering the swap.
         alts.map((alt) =>
-          el('button', { class: 'list-row', type: 'button',
-            onclick: () => { closeSheet(); applySwap(uid, alt, remember.checked); } },
-            [
-              el('div', { class: 'list-row-main' }, [
-                el('div', { class: 'list-row-title' }, [alt.name || titleize(alt.id)]),
-                el('div', { class: 'list-row-sub' }, [
-                  [titleize(alt.type || item.type), alt.axialLoading ? 'axial load' : null]
-                    .filter(Boolean)
-                    .join(' · '),
+          el('div', { class: 'wo-alt-row' }, [
+            el('button', { class: 'list-row', type: 'button',
+              onclick: () => { closeSheet(); applySwap(uid, alt, remember.checked); } },
+              [
+                el('div', { class: 'list-row-main' }, [
+                  el('div', { class: 'list-row-title' }, [alt.name || titleize(alt.id)]),
+                  el('div', { class: 'list-row-sub' }, [
+                    [titleize(alt.type || item.type), alt.axialLoading ? 'axial load' : null]
+                      .filter(Boolean)
+                      .join(' · '),
+                  ]),
                 ]),
+                el('div', { class: 'list-row-end' }, ['›']),
               ]),
-              el('div', { class: 'list-row-end' }, ['›']),
-            ])
+            infoButton(() => alt, {
+              name: alt.name || titleize(alt.id),
+              onBack: () => openSwapSheet(uid),
+            }),
+          ])
         )
       )
     : el('div', { class: 'empty-state' }, [
@@ -1231,6 +1328,7 @@ function applySwap(uid, alt, remember) {
   item.weightStep = pick(alt.weightStep, item.weightStep);
   item.axialLoading = alt.axialLoading === undefined ? false : !!alt.axialLoading;
   item.cues = pick(alt.cues, '');
+  item.howTo = pick(alt.howTo, '');
   item.alternatives = pick(alt.alternatives, item.alternatives);
   item.notice = pick(alt.notice, null);
 

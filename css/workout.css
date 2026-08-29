@@ -135,6 +135,31 @@
 }
 .wo-more:active { background: var(--elevated); }
 
+/* ⓘ — "how does this one go?". Same 44px target as ⋯, one notch quieter, and
+   it sits between the head and the ⋯ so the destructive-ish menu stays last. */
+.wo-info {
+  flex-shrink: 0;
+  width: var(--tap);
+  min-height: var(--tap);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+}
+.wo-info:active { background: var(--elevated); }
+/* Inline next to a heading (the stretch player) rather than in a card bar. */
+.wo-info--inline {
+  height: var(--tap);
+  margin-left: 2px;
+  vertical-align: middle;
+  font-size: 17px;
+  font-weight: 400;
+  border-radius: 50%;
+}
+
 .wo-card-body { padding: 0 var(--s-4) var(--s-4); }
 .wo-card[data-open="false"] .wo-card-body { display: none; }
 
@@ -356,6 +381,50 @@ textarea.wo-input {
    Sheets: swap list + finish summary
    -------------------------------------------------------------------------- */
 .wo-swap-list { margin-bottom: var(--s-3); }
+/* An alternative row is a flex wrapper so the ⓘ can sit beside the row button
+   instead of inside it. That means re-drawing the separator .list-row + .list-row
+   used to give us. */
+.wo-alt-row { display: flex; align-items: center; }
+.wo-alt-row + .wo-alt-row { border-top: 1px solid var(--border); }
+.wo-alt-row .list-row { flex: 1; min-width: 0; }
+.wo-alt-row .wo-info { margin-right: var(--s-1); }
+
+/* --------------------------------------------------------------------------
+   How-to sheet (the ⓘ)
+   -------------------------------------------------------------------------- */
+.wo-howto {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: var(--s-3);
+}
+.wo-howto-tip {
+  display: block;
+  padding: var(--s-3);
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--r-md);
+  background: var(--accent-wash);
+  margin-bottom: var(--s-4);
+}
+.wo-howto-tip-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--s-1);
+}
+.wo-howto-tip-text {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.wo-demo-link {
+  margin-bottom: var(--s-2);
+  text-decoration: none;
+}
 .wo-swap-check {
   display: flex;
   align-items: center;

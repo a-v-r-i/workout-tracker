@@ -140,7 +140,7 @@ function pick(...vals) {
  * FROZEN CONTRACT — js/views/workout.js reads exactly these fields:
  *   uid, exerciseId, swappedFrom, name, type, measure, perSide,
  *   sets, reps, weight, holdSec, durationMin, intensities,
- *   weightStep, axialLoading, cues, alternatives, notice
+ *   weightStep, axialLoading, cues, howTo, alternatives, notice
  *
  * Order of operations:
  *   1. routine item overrides sit on top of the exercise defaults
@@ -213,6 +213,8 @@ function resolveItem(raw, uid, ctx) {
     weightStep: pick(def.weightStep),
     axialLoading: !!def.axialLoading,
     cues: def.cues || '',
+    // The long-form "how to do this" text behind the ⓘ button on the card.
+    howTo: def.howTo || '',
     alternatives: (def.alternatives || []).slice(),
     notice,
   };
