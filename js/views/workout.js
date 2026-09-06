@@ -721,6 +721,239 @@ function renderHoldBody(item) {
   return nodes;
 }
 
+/* ---------------------------------------------------------- plank circuit */
+
+/**
+ * A `circuit` item (see data/routines.js) is one continuous timer rather than a
+ * set of holds: eight 30-second segments, no rest between them, and nothing to
+ * tap once it has started. That is the whole feature — the phone goes in a
+ * pocket, so every instruction has to arrive as sound and vibration. Hence a
+ * blip at each boundary ('circuit-switch') and, at the end, a rising chime
+ * ('circuit-done') that cannot be mistaken for one.
+ *
+ * The countdown shown is the WHOLE duration, not the current segment: "how much
+ * of this is left" is the only number worth glancing at.
+ */
+function circuitCfg(item) {
+  const c = item.circuit || {};
+  const segments = Math.max(1, Math.round(Number(c.segments) || 8));
+  const segmentSec = Math.max(1, Math.round(Number(c.segmentSec) || 30));
+  return { segments, segmentSec, totalSec: segments * segmentSec };
+}
+
+/** "4 min" for a whole number of minutes, "4:30" otherwise. */
+function circuitTotalText(totalSec) {
+  return totalSec % 60 === 0 ? `${totalSec / 60} min` : mmss(totalSec);
+}
+
+function circuitMeta(item) {
+  const cfg = circuitCfg(item);
+  return `${cfg.segments} × ${cfg.segmentSec}s · ${circuitTotalText(cfg.totalSec)}`;
+}
+
+/**
+ * Where the circuit as a whole is, rather than where the current segment is.
+ * Read live off the timer, so a card re-render mid-circuit redraws it exactly
+ * where it was and a background gap cannot leave a stale number on screen.
+ */
+function circuitProgress(rec) {
+  const { segments, segmentSec, totalSec } = rec.cfg;
+  const index = Math.min(Math.max(0, rec.segIndex || 0), segments - 1);
+  const totalMs = totalSec * 1000;
+  let remainingMs = 0;
+  if (!rec.done) {
+    const segMs = Math.max(0, rec.t ? rec.t.getRemaining() : segmentSec * 1000);
+    remainingMs = Math.min(totalMs, segMs + (segments - 1 - index) * segmentSec * 1000);
+  }
+  return {
+    index,
+    segments,
+    remainingSec: Math.max(0, Math.ceil(remainingMs / 1000)),
+    pct: Math.min(100, Math.max(0, ((totalMs - remainingMs) / totalMs) * 100)),
+  };
+}
+
+/** Cheap repaint, like paintTimer but on circuit arithmetic. */
+function paintCircuit(uid) {
+  const rec = timers.get(uid);
+  const card = cards.get(uid);
+  if (!rec || !card || !card.el.isConnected) return;
+  const p = circuitProgress(rec);
+
+  const value = card.el.querySelector('[data-timer-value]');
+  const ring = card.el.querySelector('[data-ring]');
+  if (value) value.textContent = mmss(p.remainingSec);
+  if (ring) ring.style.setProperty('--ring-pct', String(100 - p.pct));
+
+  const seg = card.el.querySelector('[data-circuit-seg]');
+  if (seg) seg.textContent = `Segment ${p.index + 1} / ${p.segments}`;
+
+  card.el.querySelectorAll('[data-circuit-tick]').forEach((tick) => {
+    const i = Number(tick.dataset.circuitTick);
+    tick.classList.toggle('is-current', !rec.done && i === p.index);
+    tick.classList.toggle('is-done', rec.done || i < p.index);
+  });
+}
+
+function logCircuit(item, totalSec) {
+  session.entries[item.uid] = {
+    exerciseId: item.exerciseId,
+    name: item.name,
+    swappedFrom: item.swappedFrom || null,
+    type: item.type,
+    // One "hold" of the full duration, so history and the set count treat this
+    // like any other timed core piece.
+    sets: [{ holdSec: totalSec, at: Date.now() }],
+    skipped: false,
+  };
+  persist();
+  store.updateExerciseState(item.exerciseId, { lastSetCount: 1, lastDoneAt: Date.now() });
+}
+
+/** Is there anything after this card still worth opening? */
+function hasNextTodo(uid) {
+  const order = [...cards.keys()];
+  for (let i = order.indexOf(uid) + 1; i < order.length; i++) {
+    const s = statusOf(cards.get(order[i]).item);
+    if (s === 'todo' || s === 'partial') return true;
+  }
+  return false;
+}
+
+function startCircuit(item) {
+  stopTimer(item.uid);
+  const cfg = circuitCfg(item);
+  const steps = [];
+  for (let i = 0; i < cfg.segments; i++) {
+    // Hold steps only, no transitions: a rest between segments is exactly what
+    // this circuit is not.
+    steps.push({ label: `Segment ${i + 1}`, seconds: cfg.segmentSec, kind: 'hold' });
+  }
+
+  const rec = { kind: 'circuit', t: null, snap: null, cfg, segIndex: 0, done: false };
+  rec.t = createSequence({
+    steps,
+    onTick: (snap) => {
+      rec.snap = snap;
+      paintCircuit(item.uid);
+    },
+    onStepChange: ({ index, catchUp }) => {
+      rec.segIndex = index;
+      // catchUp steps elapsed while the tab was hidden. Beeping once per
+      // skipped segment on wake would be a machine-gun, so only the segment we
+      // actually landed on cues — same rule as the stretch player.
+      if (index > 0 && !catchUp) cues.cue('circuit-switch');
+      paintCircuit(item.uid);
+    },
+    onDone: () => {
+      rec.done = true;
+      rec.segIndex = cfg.segments - 1;
+      // Fires even when the whole circuit elapsed in the background: the
+      // sequence engine finishes on the return-to-visible check, exactly once.
+      cues.cue('circuit-done');
+      logCircuit(item, cfg.totalSec);
+      renderCard(item.uid);
+      if (hasNextTodo(item.uid)) advanceFrom(item.uid);
+    },
+  });
+
+  timers.set(item.uid, rec);
+  activeCueUid = item.uid;
+  rec.t.start();
+  renderCard(item.uid);
+}
+
+function renderCircuitBody(item) {
+  const cfg = circuitCfg(item);
+  const rec = timers.get(item.uid);
+  const running = !!rec && !rec.done;
+  const complete = (!!rec && rec.done) || statusOf(item) === 'done';
+
+  const nodes = [];
+  if (item.notice) nodes.push(el('div', { class: 'wo-notice' }, [item.notice]));
+  if (item.cues) nodes.push(el('div', { class: 'wo-cues' }, [item.cues]));
+
+  const p = rec
+    ? circuitProgress(rec)
+    : { index: 0, segments: cfg.segments, remainingSec: cfg.totalSec, pct: 0 };
+
+  const ticks = [];
+  for (let i = 0; i < cfg.segments; i++) {
+    ticks.push(
+      el('span', {
+        class:
+          'wo-circuit-tick' +
+          (complete || (rec && i < p.index) ? ' is-done' : '') +
+          (running && i === p.index ? ' is-current' : ''),
+        dataset: { circuitTick: String(i) },
+        'aria-hidden': 'true',
+      })
+    );
+  }
+
+  const panel = [
+    ringEl(
+      mmss(p.remainingSec),
+      complete ? 'Complete' : running && rec.t.state === 'paused' ? 'Paused' : 'Total left',
+      100 - p.pct
+    ),
+    el('div', { class: 'wo-circuit-seg', 'data-circuit-seg': '' }, [
+      complete ? `All ${p.segments} done ✓` : `Segment ${p.index + 1} / ${p.segments}`,
+    ]),
+    el('div', { class: 'wo-circuit-ticks' }, ticks),
+  ];
+
+  if (running) {
+    const paused = rec.t.state === 'paused';
+    panel.push(
+      el('div', { class: 'wo-circuit-hint' }, [
+        paused ? 'Paused. The clock waits for you.' : 'Switch on every beep. Different sound at the end.',
+      ]),
+      el('div', { class: 'wo-timer-actions' }, [
+        el('button', { class: 'btn btn--ghost btn--sm', type: 'button',
+          onclick: () => {
+            if (paused) rec.t.resume();
+            else rec.t.pause();
+            renderCard(item.uid);
+          } },
+          [paused ? 'Resume' : 'Pause']),
+        el('button', { class: 'btn btn--ghost btn--sm', type: 'button',
+          onclick: () => {
+            stopTimer(item.uid);
+            renderCard(item.uid);
+          } },
+          ['Stop']),
+      ])
+    );
+  } else {
+    panel.push(
+      el('div', { class: 'wo-circuit-hint' }, [
+        complete
+          ? `Logged. Run it again if you have another ${circuitTotalText(cfg.totalSec)} in you.`
+          : `${cfg.segments} segments of ${cfg.segmentSec}s, no rest. Start it, then put the phone down.`,
+      ]),
+      el('div', { class: 'wo-timer-actions' }, [
+        el('button', { class: complete ? 'btn btn--ghost btn--sm' : 'btn btn--sm', type: 'button',
+          onclick: () => startCircuit(item) },
+          [complete ? 'Run it again ▶' : 'Start circuit ▶']),
+        complete
+          ? el('button', { class: 'btn btn--ghost btn--sm', type: 'button',
+              onclick: () => {
+                delete session.entries[item.uid];
+                persist();
+                stopTimer(item.uid);
+                renderCard(item.uid);
+              } },
+              ['Undo'])
+          : null,
+      ])
+    );
+  }
+
+  nodes.push(el('div', { class: 'wo-circuit' }, panel));
+  return nodes;
+}
+
 /* ----------------------------------------------------------------- cardio */
 
 const INTENSITY_LABELS = { easy: 'Easy', moderate: 'Moderate', intervals: 'Intervals', hard: 'Hard' };
@@ -850,6 +1083,9 @@ function metaLine(item) {
   const entry = entryOf(item.uid);
   if (status === 'skipped') return 'Skipped';
 
+  // The shape of the thing never changes, done or not: "8 × 30s · 4 min".
+  if (item.circuit) return circuitMeta(item);
+
   if (item.type === 'warmup') return doseText(item) || 'Movement prep';
 
   if (item.type === 'cardio') {
@@ -875,6 +1111,7 @@ function metaLine(item) {
 }
 
 function bodyFor(item) {
+  if (item.circuit) return renderCircuitBody(item);
   if (item.type === 'warmup') return renderWarmupBody(item);
   if (item.type === 'cardio') return renderCardioBody(item);
   if (item.measure === 'hold' || item.type === 'stretch') return renderHoldBody(item);
@@ -1326,6 +1563,9 @@ function applySwap(uid, alt, remember) {
   item.durationMin = pick(from('durationMin'), item.durationMin);
   item.intensities = pick(from('intensities'), item.intensities);
   item.weightStep = pick(alt.weightStep, item.weightStep);
+  // Not inherited: swapping the plank circuit for a plain plank has to drop the
+  // circuit card too, and vice versa.
+  item.circuit = alt.circuit || null;
   item.axialLoading = alt.axialLoading === undefined ? false : !!alt.axialLoading;
   item.cues = pick(alt.cues, '');
   item.howTo = pick(alt.howTo, '');
@@ -1477,7 +1717,7 @@ function cueTargetEl() {
   }
   const card = cards.get(activeCueUid);
   if (!card || !card.el.isConnected) return null;
-  return card.el.querySelector('.wo-timer') || card.el;
+  return card.el.querySelector('.wo-timer, .wo-circuit') || card.el;
 }
 
 function onVisualCue() {

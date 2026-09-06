@@ -45,6 +45,23 @@ const CUES = {
     tones: [{ freq: 440, ms: 55, gain: 0.07, delay: 0 }],
     vibrate: null,
   },
+  // Plank circuit, 30s boundary: switch to another variation. One short blip.
+  'circuit-switch': {
+    tones: [{ freq: 784, ms: 90, gain: 0.16, delay: 0 }],
+    vibrate: [70],
+  },
+  // Plank circuit finished. This one carries the whole feature: the phone is in
+  // a pocket and the ears are the only channel, so "the four minutes are over"
+  // must never be mistakable for "switch". A single blip cannot do that, so this
+  // is a rising three-note chime (about 500ms) over a long double buzz.
+  'circuit-done': {
+    tones: [
+      { freq: 659, ms: 150, gain: 0.18, delay: 0 },
+      { freq: 880, ms: 150, gain: 0.18, delay: 150 },
+      { freq: 1319, ms: 200, gain: 0.18, delay: 300 },
+    ],
+    vibrate: [120, 80, 120, 80, 250],
+  },
 };
 
 let ctx = null;
@@ -135,7 +152,7 @@ function tone({ freq, ms, gain, delay }) {
 
 /**
  * Fire one cue across every channel the user has left switched on.
- * @param {'rest-done'|'hold-done'|'transition'|'countdown'} kind
+ * @param {'rest-done'|'hold-done'|'transition'|'countdown'|'circuit-switch'|'circuit-done'} kind
  */
 export function cue(kind) {
   const spec = CUES[kind];

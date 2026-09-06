@@ -19,6 +19,12 @@
  *     `intensities` and ignore `measure`.
  *   - `perSide: true` means the dose is per side; the workout player expands
  *     it into a left and a right leg of the same item.
+ *   - `circuit: { segments, segmentSec }` marks an exercise that is one
+ *     continuous timer cut into equal segments with no rest between them, and
+ *     no interaction once it starts. The workout player renders those items as
+ *     a dedicated circuit card instead of the per-set hold UI: one countdown
+ *     over the whole duration, a beep at every segment boundary, and a clearly
+ *     different chime at the end. Only `plank-circuit` uses it today.
  *   - `cues` is the terse mid-set reminder shown on the card. `howTo` is the
  *     fuller beginner explanation behind the ⓘ button: setup, the movement,
  *     what it should feel like, and where relevant what to do if the lower back
@@ -944,7 +950,8 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: false,
-    alternatives: ['dead-bug', 'bird-dog', 'plank-shoulder-taps', 'bear-hold'],
+    // plank-circuit last so swapping the circuit out and back is a round trip.
+    alternatives: ['dead-bug', 'bird-dog', 'plank-shoulder-taps', 'bear-hold', 'plank-circuit'],
     cues: 'Ribs down, glutes on, one straight line. Drop to the knees if the back complains.',
     howTo:
       'Lie face down, then prop yourself on your forearms with your elbows under your shoulders' +
@@ -962,7 +969,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: ['side-plank-knees', 'pallof-press', 'dead-bug', 'suitcase-carry'],
+    alternatives: ['side-plank-knees', 'pallof-press', 'dead-bug', 'suitcase-carry', 'plank-circuit'],
     cues: 'A little extra on the weaker side is fine, pain-guided. Hips stacked and lifted.',
     howTo:
       'Lie on your side and prop yourself on the bottom forearm, elbow directly under the ' +
@@ -1015,7 +1022,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: true,
-    alternatives: ['dead-bug', 'front-plank', 'bear-hold', 'side-plank-knees'],
+    alternatives: ['dead-bug', 'front-plank', 'bear-hold', 'side-plank-knees', 'plank-circuit'],
     cues: 'Slow, hips level, reach long not high.',
     howTo:
       'On your hands and knees, hands under your shoulders and knees under your hips. Reach one' +
@@ -1082,6 +1089,34 @@ export const EXERCISES = {
       'torso opposite the dumbbell working hard to keep you upright. Then carry it in the ' +
       'other hand. Start lighter than feels necessary, and if you cannot stop your torso ' +
       'tipping, the weight is too heavy.',
+  },
+
+  // The one core piece that runs in every session: a single four-minute timer
+  // rather than sets, because the whole point is that nothing has to be tapped
+  // once it starts. `circuit` is what tells the player to do that.
+  'plank-circuit': {
+    name: 'Plank circuit',
+    type: 'core',
+    equipment: 'none',
+    axialLoading: false,
+    circuit: { segments: 8, segmentSec: 30 },
+    defaults: {},
+    weightStep: null,
+    measure: 'hold',
+    perSide: false,
+    alternatives: ['front-plank', 'side-plank', 'bird-dog'],
+    cues: 'Switch variation at every beep. No rest, no thinking, just move to the next one.',
+    howTo:
+      'Four minutes of plank split into eight 30-second segments: hold one plank variation until ' +
+      'the beep, then move straight into another one with no rest in between. The menu is a set ' +
+      'of suggestions to rotate through by feel, not an order: shoulder taps, leg lifts drawing ' +
+      'one knee toward the same-side arm and then toward the middle, arm plus opposite-leg ' +
+      'reaches, side planks, and up-downs onto the forearms on the days you feel strong. On a ' +
+      'quiet day the static version counts just as much, holding a front plank or side planks ' +
+      'through each segment instead of moving. The end of the four minutes sounds clearly ' +
+      'different from the switch beeps, so there is no need to watch the screen. The usual back ' +
+      'rule still applies: if your hips start to sag, drop to your knees or stop, because four ' +
+      'clean minutes beats four sagging ones.',
   },
 
   /* ----------------------------------------------------------------- cardio */
@@ -1495,6 +1530,8 @@ export const ROUTINES = [
             items: [
               { ex: 'front-plank', day: 'A', sets: 2, holdSec: 40 },
               { ex: 'side-plank', day: 'B', sets: 2, holdSec: 30 },
+              // Dayless: the circuit closes out the core block on both A and B.
+              { ex: 'plank-circuit' },
             ],
           },
           {
@@ -1540,6 +1577,7 @@ export const ROUTINES = [
               { ex: 'bird-dog', day: 'A', sets: 2, reps: 8 },
               { ex: 'side-plank', day: 'B', sets: 2, holdSec: 30 },
               { ex: 'dead-bug', day: 'B', sets: 2, reps: 10 },
+              { ex: 'plank-circuit' },
             ],
           },
           {
@@ -1600,6 +1638,7 @@ export const ROUTINES = [
               { ex: 'side-plank', day: 'B', sets: 2, holdSec: 30 },
               { ex: 'dead-bug', day: 'B', sets: 2, reps: 10 },
               { ex: 'bird-dog', day: 'B', sets: 2, reps: 8 },
+              { ex: 'plank-circuit' },
             ],
           },
           {
@@ -1636,6 +1675,10 @@ export const ROUTINES = [
             ],
           },
           {
+            title: 'Core',
+            items: [{ ex: 'plank-circuit' }],
+          },
+          {
             title: 'Cardio',
             note: 'Thirty to forty-five minutes. Steady or variable intervals, your call.',
             items: [{ ex: 'bike-elliptical', durationMin: 35 }],
@@ -1665,12 +1708,38 @@ export const ROUTINES = [
               { ex: 'bird-dog', sets: 1, reps: 8 },
               { ex: 'front-plank', sets: 1, holdSec: 40 },
               { ex: 'side-plank', sets: 1, holdSec: 30 },
+              { ex: 'plank-circuit' },
             ],
           },
         ],
       },
       pain: {
         blocks: [{ title: 'Stretch sequence', note: gentleStretchNote, items: fullStretchSet() }],
+      },
+    },
+  },
+
+  // The circuit on its own, for the days that are nothing but the four minutes.
+  // kind: 'core' keeps it out of the gym and stretch groups on Home, where it
+  // gets its own "Quick core" shelf.
+  {
+    id: 'plank-4min',
+    name: 'Plank Circuit',
+    kind: 'core',
+    estMinutes: 5,
+    description: 'Four minutes, switch on every beep.',
+    variants: {
+      regular: {
+        blocks: [{ title: 'Plank circuit', items: [{ ex: 'plank-circuit' }] }],
+      },
+      pain: {
+        blocks: [
+          {
+            title: 'Plank circuit',
+            note: 'Static holds or knees-down versions today. Stopping early is fine.',
+            items: [{ ex: 'plank-circuit' }],
+          },
+        ],
       },
     },
   },

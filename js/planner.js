@@ -20,6 +20,10 @@ const AXIAL_NOTICE = 'Substituted (skip axial loading)';
 
 const DEFAULT_INTENSITIES = ['easy', 'moderate', 'intervals', 'hard'];
 
+/** Home groups the picker by kind, so a routine with an unknown kind would
+ *  simply vanish from it. validateData() catches that. */
+const ROUTINE_KINDS = new Set(['gym', 'stretch', 'core']);
+
 /* ------------------------------------------------------------ pain check-in */
 
 /**
@@ -130,12 +134,23 @@ function pick(...vals) {
 }
 
 /**
+ * A continuous multi-segment timer (see `circuit` in data/routines.js), or null
+ * for the overwhelming majority of exercises that are counted in sets.
+ */
+function circuitOf(c) {
+  if (!c || typeof c !== 'object') return null;
+  const segments = Math.max(1, Math.round(Number(c.segments) || 0));
+  const segmentSec = Math.max(1, Math.round(Number(c.segmentSec) || 0));
+  return { segments, segmentSec };
+}
+
+/**
  * Resolve one routine item into a ResolvedItem.
  *
  * FROZEN CONTRACT — js/views/workout.js reads exactly these fields:
  *   uid, exerciseId, swappedFrom, name, type, measure, perSide,
  *   sets, reps, weight, holdSec, durationMin, intensities,
- *   weightStep, axialLoading, cues, howTo, alternatives, notice
+ *   weightStep, axialLoading, circuit, cues, howTo, alternatives, notice
  *
  * Order of operations:
  *   1. routine item overrides sit on top of the exercise defaults
@@ -207,6 +222,10 @@ function resolveItem(raw, uid, ctx) {
     intensities: isCardio ? over.intensities || def.intensities || DEFAULT_INTENSITIES : null,
     weightStep: pick(def.weightStep),
     axialLoading: !!def.axialLoading,
+    // Copied rather than referenced: a ResolvedItem is persisted with the
+    // session and lives longer than this call, and nothing should be able to
+    // reach back into the data file through it.
+    circuit: circuitOf(over.circuit || def.circuit),
     cues: def.cues || '',
     // The long-form "how to do this" text behind the ⓘ button on the card.
     howTo: def.howTo || '',
@@ -364,6 +383,9 @@ export function validateData() {
   for (const routine of ROUTINES) {
     if (seenIds.has(routine.id)) problems.push(`routine "${routine.id}": duplicate id`);
     seenIds.add(routine.id);
+    if (!ROUTINE_KINDS.has(routine.kind)) {
+      problems.push(`routine "${routine.id}": unknown kind "${routine.kind}"`);
+    }
     if (!routine.variants || !routine.variants.regular) {
       problems.push(`routine "${routine.id}": missing regular variant`);
       continue;

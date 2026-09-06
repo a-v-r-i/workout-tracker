@@ -293,6 +293,49 @@
 }
 
 /* --------------------------------------------------------------------------
+   Plank circuit — one continuous timer, read from across the room
+   -------------------------------------------------------------------------- */
+.wo-circuit {
+  margin: var(--s-4) 0 var(--s-2);
+  padding: var(--s-4) var(--s-3) var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  text-align: center;
+}
+/* Bigger than the rest timer: this is the number you glance at mid-plank. */
+.wo-circuit .progress-ring { --ring-size: 190px; margin-bottom: var(--s-3); }
+.wo-circuit-seg {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.wo-circuit-ticks {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin: var(--s-3) 0 var(--s-2);
+}
+.wo-circuit-tick {
+  width: 22px;
+  max-width: 8vw;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+.wo-circuit-tick.is-done { background: var(--text-tertiary); }
+.wo-circuit-tick.is-current { background: var(--accent); }
+.wo-circuit-hint {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0 auto var(--s-3);
+  max-width: 32ch;
+}
+
+/* --------------------------------------------------------------------------
    Cardio
    -------------------------------------------------------------------------- */
 .wo-field { margin-bottom: var(--s-3); }
@@ -483,4 +526,4 @@ textarea.wo-input {
 .wo-discard:active { color: var(--danger); }
 
 /* The pulse cue paints a background; give it something to paint on. */
-.wo-timer.pulse, .wo-seq.pulse { border-radius: var(--r-md); }
+.wo-timer.pulse, .wo-seq.pulse, .wo-circuit.pulse { border-radius: var(--r-md); }

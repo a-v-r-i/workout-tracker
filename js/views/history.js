@@ -515,18 +515,33 @@ function entryLines(s, unit) {
 }
 
 /**
+ * A hold, in the unit a human would say it in. Anything from 90 seconds up is
+ * a stretch of minutes, not a count of seconds: the plank circuit logs one
+ * 240-second hold, and "240s" reads as a bug where "4 min" reads as the truth.
+ */
+function holdText(sec) {
+  if (sec < 90) return `${sec}s`;
+  const mins = sec / 60;
+  return `${Number.isInteger(mins) ? mins : Math.round(mins * 10) / 10} min`;
+}
+
+/**
  * Collapse a set list to as few lines as possible:
  *   identical sets  -> "3 × 60 kg × 10"  /  "3 × 30s"
+ *   a lone set      -> just the set, with no "1 × " in front of it
  *   mixed sets      -> one line each
  */
 function setLines(sets, unit) {
   const list = Array.isArray(sets) ? sets.filter(Boolean) : [];
   if (!list.length) return ['done'];
+  const times = (n, text) => (n > 1 ? `${n} × ${text}` : text);
 
   const holds = list.filter((x) => typeof x.holdSec === 'number');
   if (holds.length === list.length) {
     const same = holds.every((x) => x.holdSec === holds[0].holdSec);
-    return same ? [`${holds.length} × ${holds[0].holdSec}s`] : holds.map((x) => `${x.holdSec}s`);
+    return same
+      ? [times(holds.length, holdText(holds[0].holdSec))]
+      : holds.map((x) => holdText(x.holdSec));
   }
 
   const describe = (x) => {
@@ -539,7 +554,7 @@ function setLines(sets, unit) {
   };
 
   const first = describe(list[0]);
-  if (list.every((x) => describe(x) === first)) return [`${list.length} × ${first}`];
+  if (list.every((x) => describe(x) === first)) return [times(list.length, first)];
   return list.map(describe);
 }
 

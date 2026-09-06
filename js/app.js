@@ -252,9 +252,76 @@ function registerServiceWorker() {
   });
 }
 
+/* ----------------------------------------------- stale-session auto-finish */
+
+const STALE_AFTER_MS = 2 * 60 * 60 * 1000; // a workout still "open" after 2h was forgotten
+const ASSUMED_DURATION_MS = 75 * 60 * 1000; // save it as a 1h15 session
+
+/**
+ * If an active session was started more than 2 hours ago, the user forgot to
+ * tap Finish. With logged work: save it as a 1h15 session (never ending before
+ * the last logged set + 5 min). With nothing logged: discard it quietly.
+ * Returns true if it resolved a stale session either way.
+ */
+function autoFinishStaleSession() {
+  const session = store.getActiveSession();
+  if (!session || !session.startedAt) return false;
+  if (Date.now() - session.startedAt < STALE_AFTER_MS) return false;
+
+  // Ordered entries, same blocks -> items order the workout view uses.
+  const entries = [];
+  let lastAt = 0;
+  for (const block of session.blocks || []) {
+    for (const item of block.items || []) {
+      const e = (session.entries || {})[item.uid];
+      if (!e) continue;
+      entries.push(Object.assign({ uid: item.uid, block: block.title || null }, e));
+      for (const s of e.sets || []) if (s.at) lastAt = Math.max(lastAt, s.at);
+    }
+  }
+
+  if (!entries.some((e) => !e.skipped)) {
+    store.clearActiveSession();
+    showToast('Discarded an empty workout that was left open.');
+    return true;
+  }
+
+  const endedAt = Math.max(
+    session.startedAt + ASSUMED_DURATION_MS,
+    lastAt ? lastAt + 5 * 60 * 1000 : 0
+  );
+  store.appendSession({
+    id: session.id,
+    date: session.date,
+    startedAt: session.startedAt,
+    endedAt,
+    painLevel: session.painLevel,
+    routineId: session.routineId,
+    routineName: session.routineName,
+    variant: session.variant,
+    dayLabel: session.dayLabel,
+    entries,
+    note: [session.note, '(auto-finished: left open past 2h, saved as 1h15)']
+      .filter(Boolean)
+      .join(' '),
+  });
+  store.clearActiveSession();
+  showToast('Unfinished workout saved as a 1h 15m session.');
+  return true;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  if (!autoFinishStaleSession()) return;
+  // The session is gone; get the UI off the dead workout screen.
+  if (current.name === 'workout') navigate('#/home');
+  else render();
+});
+
 /* ---------------------------------------------------------------- boot */
 
 function boot() {
+  autoFinishStaleSession();
   store.migrate();
 
   // Ask for durable storage so Android does not evict the workout log.

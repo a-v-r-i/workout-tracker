@@ -57,6 +57,22 @@ Default strength dose: 3 sets × 8-12 reps, ~90s rest. Progress by adding reps t
 
 **Core swap bench:** every core piece also offers plank with shoulder taps, bear hold, and suitcase carry (⚠️ axial, but one of the better anti-lean drills for a scoliotic back) alongside the plank / dead bug / bird dog regulars.
 
+### Plank circuit (4 min, every session)
+
+One continuous 4-minute timer split into 8 × 30s segments, with **no rest and no interaction** once it starts. A short beep marks each 30s boundary: that is the cue to switch straight into another plank variation. The end of the 4 minutes plays a **rising three-note chime** plus a long double vibration, deliberately unlike the switch beep, so the phone can stay in a pocket and the whole thing runs by ear.
+
+Variation menu, rotated by feel rather than in a fixed order:
+
+- Plank shoulder taps
+- Leg lifts from plank: draw one knee toward the same-side arm, then toward the middle, then back
+- Arm + opposite-leg reaches (bird-dog plank)
+- Side planks
+- Plank up-downs (motivated days only)
+
+**Static option for quiet days:** hold a front plank or side planks through each segment instead of moving. Non-training days often get this version. Sagging hips still mean knees down or stop.
+
+It closes out the Core block of every gym session (Short / Medium / Long, both Day A and Day B), sits between the strength and cardio work on a Cardio Focus day, ends the optional core add-on after a full stretch routine, and is also a standalone session of its own ("Plank Circuit", ~5 min) under **Quick core** on the Home screen.
+
 ### Cardio finisher
 
 Bike or elliptical, any intensity that feels right (steady or intervals). Log duration + intensity + optional kcal.

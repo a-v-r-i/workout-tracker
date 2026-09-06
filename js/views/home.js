@@ -301,6 +301,10 @@ function sessionPicker(active) {
   };
 
   const gym = routines.filter((r) => r.kind === 'gym');
+  // Its own shelf between the gym sessions and the stretches: the plank circuit
+  // is neither, and it is the one thing that gets started from cold most days,
+  // so it has to be one tap from here rather than buried in a longer list.
+  const core = routines.filter((r) => r.kind === 'core');
   const stretch = routines.filter((r) => r.kind === 'stretch');
 
   return el('section', {}, [
@@ -311,6 +315,8 @@ function sessionPicker(active) {
         ])
       : null,
     el('div', { class: 'card card--flush' }, gym.map(rowFor)),
+    core.length ? el('div', { class: 'section-title' }, ['Quick core']) : null,
+    core.length ? el('div', { class: 'card card--flush' }, core.map(rowFor)) : null,
     el('div', { class: 'section-title' }, ['Stretch only']),
     el('div', { class: 'card card--flush' }, stretch.map(rowFor)),
   ]);
