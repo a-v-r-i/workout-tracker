@@ -49,7 +49,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: false,
-    alternatives: [],
+    alternatives: ['childs-pose-side-reach', 'open-book-rotation'],
     cues: 'Gentle full range, no forcing end-range.',
     howTo:
       'Start on your hands and knees, hands under your shoulders and knees under your hips. ' +
@@ -137,7 +137,7 @@ export const EXERCISES = {
     weightStep: 5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['single-leg-leg-press', 'leg-extension'],
+    alternatives: ['single-leg-leg-press', 'leg-extension', 'wall-sit', 'db-step-up'],
     cues: "Feet mid-platform. Don't let the lower back round off the pad at depth.",
     howTo:
       'Sit in the leg press machine with your back and hips flat against the padded seat and ' +
@@ -156,7 +156,7 @@ export const EXERCISES = {
     weightStep: 5,
     measure: 'reps',
     perSide: true,
-    alternatives: ['leg-press', 'leg-extension'],
+    alternatives: ['leg-press', 'leg-extension', 'wall-sit', 'db-step-up'],
     cues: 'Hips stay square on the seat. Same depth both sides.',
     howTo:
       'The same leg press machine, one leg at a time. Put one foot in the middle of the ' +
@@ -173,7 +173,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['leg-press', 'single-leg-leg-press'],
+    alternatives: ['leg-press', 'single-leg-leg-press', 'wall-sit', 'db-step-up'],
     cues: 'Back against the pad, pause briefly at the top.',
     howTo:
       'Sit in the leg extension machine with your back against the pad and the padded roller ' +
@@ -181,6 +181,25 @@ export const EXERCISES = {
       ' a beat at the top, then lower slowly. You should feel it in the front of the thighs. ' +
       'Keep your back on the pad: if you are leaning backward to move the weight, it is too ' +
       'heavy.',
+  },
+  'wall-sit': {
+    name: 'Wall sit',
+    type: 'strength',
+    equipment: 'bodyweight',
+    axialLoading: false,
+    defaults: { sets: 3, holdSec: 40 },
+    weightStep: null,
+    measure: 'hold',
+    perSide: false,
+    alternatives: ['leg-press', 'leg-extension', 'single-leg-leg-press'],
+    cues: 'Whole back flat on the wall. Burning thighs are the point.',
+    howTo:
+      'Stand with your back flat against a wall, then walk your feet forward and slide down ' +
+      'until your knees are bent to about 90 degrees, or less deep if that is too much. Hold ' +
+      'there with your whole back, lower back included, pressed against the wall and your ' +
+      'weight through your heels. Your thighs will burn, which is the point. Because the wall ' +
+      'carries your torso, nothing presses down through the spine, so this is a friendly way ' +
+      'to work the legs on a stiff day.',
   },
   'chest-press': {
     name: 'Chest press',
@@ -191,7 +210,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['db-bench-press', 'push-ups'],
+    alternatives: ['db-bench-press', 'push-ups', 'pec-deck', 'incline-machine-press'],
     cues: 'Shoulder blades set, feet planted.',
     howTo:
       'Sit in the chest press machine and set the seat height so the handles line up with the ' +
@@ -209,7 +228,7 @@ export const EXERCISES = {
     weightStep: 2,
     measure: 'reps',
     perSide: false,
-    alternatives: ['chest-press', 'push-ups'],
+    alternatives: ['chest-press', 'push-ups', 'incline-db-press', 'pec-deck'],
     cues: 'Weight per dumbbell. Ribs down, feet planted.',
     howTo:
       'Lie on a flat bench with a dumbbell in each hand and your feet flat on the floor. Start ' +
@@ -227,7 +246,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: false,
-    alternatives: ['chest-press', 'db-bench-press'],
+    alternatives: ['chest-press', 'db-bench-press', 'pec-deck', 'cable-fly'],
     cues: 'One line from head to heels. Elevate the hands if the back sags.',
     howTo:
       'Hands on the floor a little wider than your shoulders, body in one straight line from ' +
@@ -235,6 +254,43 @@ export const EXERCISES = {
       ' Squeeze your glutes so your hips do not sag. If your lower back sags or aches, put your' +
       ' hands on a bench or a bar in a rack so your body is at an angle: that makes it easier ' +
       'straight away.',
+  },
+  'pec-deck': {
+    name: 'Pec deck',
+    type: 'strength',
+    equipment: 'machine',
+    axialLoading: false,
+    defaults: { sets: 3, reps: 12, weight: 20 },
+    weightStep: 2.5,
+    measure: 'reps',
+    perSide: false,
+    alternatives: ['cable-fly', 'chest-press', 'db-bench-press', 'push-ups'],
+    cues: 'Elbows stay slightly bent. Squeeze the arms together in front of the chest.',
+    howTo:
+      'Sit in the chest fly machine with your back flat against the pad and your forearms or ' +
+      'hands against the two padded arms, elbows at about chest height. Bring the arms ' +
+      'together in front of your chest, pause for a beat, then let them open slowly until you ' +
+      'feel a gentle stretch across the chest. You should feel it across the middle of the ' +
+      'chest rather than in the shoulders. Keep your back on the pad, and stop opening the ' +
+      'arms as soon as the front of the shoulder starts to pinch.',
+  },
+  'cable-fly': {
+    name: 'Cable chest fly',
+    type: 'strength',
+    equipment: 'cable',
+    axialLoading: false,
+    defaults: { sets: 3, reps: 12, weight: 10 },
+    weightStep: 2.5,
+    measure: 'reps',
+    perSide: false,
+    alternatives: ['pec-deck', 'chest-press', 'incline-db-press', 'push-ups'],
+    cues: 'One handle per hand, the number is one stack. Ribs down, no leaning back.',
+    howTo:
+      'Set two cables to about shoulder height, take a handle in each hand, and stand between ' +
+      'them with one foot a small step forward for balance. With a slight bend in the elbows, ' +
+      'sweep both hands together in front of your chest, then let them travel back out slowly. ' +
+      'You should feel it across the chest. Stand tall with your ribs down instead of leaning ' +
+      'back to move the weight, because that lean is what your lower back feels.',
   },
   'seated-cable-row': {
     name: 'Seated cable row',
@@ -245,7 +301,12 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['chest-supported-row', 'single-arm-db-row'],
+    alternatives: [
+      'chest-supported-row',
+      'single-arm-db-row',
+      'machine-high-row',
+      'wide-machine-row',
+    ],
     cues: 'Tall neutral spine, pull to the belly, no torso heave.',
     howTo:
       'Sit at the low cable row station facing the pulley, feet on the footplates, knees ' +
@@ -263,7 +324,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['seated-cable-row', 'single-arm-db-row'],
+    alternatives: ['seated-cable-row', 'single-arm-db-row', 'machine-high-row', 'wide-machine-row'],
     cues: 'Chest stays on the pad. The pad does the spine-stabilizing for you.',
     howTo:
       'Use the seated row machine with a chest pad, the one where you sit facing the pad rather' +
@@ -281,7 +342,12 @@ export const EXERCISES = {
     weightStep: 2,
     measure: 'reps',
     perSide: true,
-    alternatives: ['chest-supported-row', 'seated-cable-row'],
+    alternatives: [
+      'chest-supported-row',
+      'seated-cable-row',
+      'machine-high-row',
+      'wide-machine-row',
+    ],
     cues: 'Hand on the bench, flat back, no twisting to finish the rep.',
     howTo:
       'Put one knee and the same-side hand on a flat bench, other foot on the floor, so your ' +
@@ -289,6 +355,30 @@ export const EXERCISES = {
       'it hang, then pull it up toward your hip and lower it slowly. Keep your shoulders level:' +
       ' no twisting to finish the rep. If the bent-over position bothers your back, use the ' +
       'chest-supported row machine instead.',
+  },
+  'machine-high-row': {
+    name: 'Machine high row',
+    type: 'strength',
+    equipment: 'machine',
+    axialLoading: false,
+    defaults: { sets: 3, reps: 10, weight: 25 },
+    weightStep: 2.5,
+    measure: 'reps',
+    perSide: false,
+    alternatives: [
+      'chest-supported-row',
+      'lat-pulldown',
+      'seated-cable-row',
+      'close-grip-pulldown',
+    ],
+    cues: 'Chest on the pad. Pull down and back toward the hips.',
+    howTo:
+      'Sit at the high row machine, the chest-supported one where the handles start above your ' +
+      'shoulders, and set the seat so you can reach them with your arms almost straight. Pull ' +
+      'the handles down and back toward your hips, leading with your elbows, then let them ' +
+      'travel up slowly. You should feel it in the lats, along the sides and middle of your ' +
+      'back. Your chest stays against the pad, which keeps your spine supported and out of the ' +
+      'movement.',
   },
   'db-hip-thrust': {
     name: 'DB hip thrust',
@@ -299,7 +389,12 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['bw-glute-bridge', 'glute-kickback-machine'],
+    alternatives: [
+      'bw-glute-bridge',
+      'glute-kickback-machine',
+      'cable-glute-kickback',
+      'bridge-hamstring-slide',
+    ],
     cues: "Posterior tilt at the top, squeeze the glutes, ribs down. Don't hyperextend the back.",
     howTo:
       'Sit on the floor with your upper back against the long side of a bench, knees bent and ' +
@@ -318,7 +413,12 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: false,
-    alternatives: ['db-hip-thrust', 'glute-kickback-machine'],
+    alternatives: [
+      'db-hip-thrust',
+      'glute-kickback-machine',
+      'cable-glute-kickback',
+      'bridge-hamstring-slide',
+    ],
     cues: 'Drive through the heels. Go single-leg when both legs feel easy.',
     howTo:
       'Lie on your back with your knees bent and feet flat on the floor. Push through your ' +
@@ -336,7 +436,12 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: true,
-    alternatives: ['db-hip-thrust', 'bw-glute-bridge'],
+    alternatives: [
+      'db-hip-thrust',
+      'bw-glute-bridge',
+      'cable-glute-kickback',
+      'hip-abduction-machine',
+    ],
     cues: 'Move from the hip, not the lower back. Small honest range.',
     howTo:
       'Stand at the glute kickback machine facing the pad, with your chest and hands supported ' +
@@ -353,7 +458,12 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['assisted-pullup-machine', 'straight-arm-pulldown'],
+    alternatives: [
+      'close-grip-pulldown',
+      'assisted-pullup-machine',
+      'straight-arm-pulldown',
+      'machine-high-row',
+    ],
     cues: 'A slight lean is fine, no lumbar arch-yank.',
     howTo:
       'Sit at the lat pulldown, tuck your thighs under the pads, and take a wide overhand grip ' +
@@ -370,7 +480,12 @@ export const EXERCISES = {
     weightStep: 5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['lat-pulldown', 'straight-arm-pulldown'],
+    alternatives: [
+      'lat-pulldown',
+      'close-grip-pulldown',
+      'straight-arm-pulldown',
+      'machine-high-row',
+    ],
     cues: 'The number is the assist: higher is easier. Ribs down at the top.',
     howTo:
       'This is the machine with a padded platform that helps push you up. The number you set is' +
@@ -387,13 +502,41 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['lat-pulldown', 'assisted-pullup-machine'],
+    alternatives: [
+      'lat-pulldown',
+      'close-grip-pulldown',
+      'assisted-pullup-machine',
+      'machine-high-row',
+    ],
     cues: 'Hinge stays out of it. Arms move, torso stays quiet.',
     howTo:
       'Stand facing a cable machine with the pulley set high and a straight bar or a rope ' +
       'attached. With your arms straight, pull the bar down in an arc from head height to your ' +
       'thighs, then let it float back up. Hinge forward slightly at the hips and then hold that' +
       ' position: only your arms move, your torso and lower back stay quiet.',
+  },
+  'close-grip-pulldown': {
+    name: 'Close-grip lat pulldown',
+    type: 'strength',
+    equipment: 'cable',
+    axialLoading: false,
+    defaults: { sets: 3, reps: 10, weight: 30 },
+    weightStep: 2.5,
+    measure: 'reps',
+    perSide: false,
+    alternatives: [
+      'lat-pulldown',
+      'assisted-pullup-machine',
+      'straight-arm-pulldown',
+      'machine-high-row',
+    ],
+    cues: 'Narrow grip. Elbows drive down to the ribs.',
+    howTo:
+      'Sit at the lat pulldown with the narrow V-shaped handle instead of the wide bar, thighs ' +
+      'tucked under the pads. Pull the handle down to the top of your chest, driving your ' +
+      'elbows down toward your ribs, then let it rise back up under control. You should feel ' +
+      'it low in the lats, along the sides of your back. Hold your torso still through the ' +
+      'whole rep rather than rocking backward to start each pull.',
   },
   'pallof-press': {
     name: 'Cable Pallof press',
@@ -404,7 +547,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: true,
-    alternatives: ['dead-bug', 'bird-dog'],
+    alternatives: ['dead-bug', 'bird-dog', 'side-plank', 'suitcase-carry'],
     cues: 'Resist the rotation, breathe, hips square.',
     howTo:
       'Set a cable at about chest height and stand side-on to the machine, feet shoulder width ' +
@@ -425,7 +568,7 @@ export const EXERCISES = {
     weightStep: 2,
     measure: 'reps',
     perSide: false,
-    alternatives: ['leg-press', 'db-split-squat'],
+    alternatives: ['leg-press', 'single-leg-leg-press', 'leg-extension', 'db-split-squat'],
     cues: 'Chest tall, sit between the hips, depth stays pain-free.',
     howTo:
       'Hold one dumbbell or kettlebell upright against your chest with both hands, feet a ' +
@@ -445,7 +588,7 @@ export const EXERCISES = {
     weightStep: 2,
     measure: 'reps',
     perSide: true,
-    alternatives: ['leg-press', 'single-leg-leg-press'],
+    alternatives: ['leg-press', 'single-leg-leg-press', 'leg-extension', 'db-step-up'],
     cues: 'Light dumbbells at the sides. Torso upright, back knee travels down.',
     howTo:
       'Stand with one foot forward and the other a long step behind you, a light dumbbell ' +
@@ -453,6 +596,29 @@ export const EXERCISES = {
       'then press back up through the front foot. Torso stays upright rather than leaning over.' +
       ' Hold a rack or a wall with one hand if balance is the limiting factor. All reps on one ' +
       'side, then switch.',
+  },
+  'db-step-up': {
+    name: 'Step-up onto a low box',
+    type: 'strength',
+    equipment: 'dumbbell',
+    // Standing tall with dumbbells hanging is load travelling down through the
+    // spine, same honest call as db-split-squat. Leg press is listed first so
+    // "skip axial loading" lands on a machine.
+    axialLoading: true,
+    defaults: { sets: 3, reps: 8, weight: 6 },
+    weightStep: 2,
+    measure: 'reps',
+    perSide: true,
+    alternatives: ['leg-press', 'single-leg-leg-press', 'wall-sit', 'db-split-squat'],
+    cues: 'Low box, light dumbbells. Stand up through the front foot.',
+    howTo:
+      'Find a box or a bench low enough that your knee stays below hip height when your foot ' +
+      'is on it, and hold a light dumbbell in each hand. Step up with one foot and stand up ' +
+      'through that leg, then step back down slowly, doing all the reps on one side before ' +
+      'switching. You should feel it in the front thigh and the glute of the working leg. ' +
+      'Holding weight while standing tall does press down through the spine, so keep the ' +
+      'dumbbells light and use the leg press instead on a day when your back is talking to ' +
+      'you.',
   },
   'incline-db-press': {
     name: 'Incline DB press',
@@ -463,7 +629,7 @@ export const EXERCISES = {
     weightStep: 2,
     measure: 'reps',
     perSide: false,
-    alternatives: ['incline-machine-press', 'chest-press'],
+    alternatives: ['incline-machine-press', 'chest-press', 'db-bench-press', 'pec-deck'],
     cues: '30 to 45 degree incline, feet planted.',
     howTo:
       'Set an adjustable bench to about a 30 to 45 degree incline and sit back with a dumbbell ' +
@@ -480,7 +646,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['incline-db-press', 'chest-press'],
+    alternatives: ['incline-db-press', 'chest-press', 'pec-deck', 'db-bench-press'],
     cues: 'Back flat on the pad, no arching to move more weight.',
     howTo:
       'The pressing machine whose seat leans back, so you push up and away at an angle. Set the' +
@@ -497,7 +663,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['wide-machine-row', 'face-pull'],
+    alternatives: ['wide-machine-row', 'face-pull', 'reverse-pec-deck', 'machine-high-row'],
     cues: 'Elbows a little high, squeeze the mid-back.',
     howTo:
       'The same seated cable row station, but with a wide bar instead of the close handle. Sit ' +
@@ -515,7 +681,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['seated-row-wide', 'face-pull'],
+    alternatives: ['seated-row-wide', 'face-pull', 'reverse-pec-deck', 'machine-high-row'],
     cues: 'Chest on the pad, pull wide and slightly high.',
     howTo:
       'The chest-supported row machine, using the wide handles. Set the seat so the handles are' +
@@ -533,13 +699,37 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['seated-row-wide', 'wide-machine-row'],
+    alternatives: [
+      'reverse-pec-deck',
+      'seated-row-wide',
+      'wide-machine-row',
+      'chest-supported-row',
+    ],
     cues: 'Rope to the forehead, elbows high, light weight and clean reps.',
     howTo:
       'Attach a rope to a cable set at about head height. Stand tall, take one end of the rope ' +
       'in each hand, and pull it toward your forehead so your hands finish beside your ears ' +
       'with your elbows high. Return slowly. Keep the weight light: this is for the small ' +
       'muscles of the upper back and shoulders, and clean reps beat heavy ones every time.',
+  },
+  'reverse-pec-deck': {
+    name: 'Reverse pec deck',
+    type: 'strength',
+    equipment: 'machine',
+    axialLoading: false,
+    defaults: { sets: 3, reps: 15, weight: 12 },
+    weightStep: 2.5,
+    measure: 'reps',
+    perSide: false,
+    alternatives: ['face-pull', 'wide-machine-row', 'seated-row-wide', 'chest-supported-row'],
+    cues: 'Light weight, wide arms, squeeze between the shoulder blades.',
+    howTo:
+      'This is the chest fly machine turned around, so you sit facing the pad with your chest ' +
+      'against it and the handles out in front of you. Take a handle in each hand with your ' +
+      'arms almost straight and sweep them out and back, like opening a pair of curtains, then ' +
+      'return slowly. You should feel it between the shoulder blades and at the back of the ' +
+      'shoulders. Keep the weight light and let your chest stay on the pad rather than pushing ' +
+      'off it to find more range.',
   },
   'seated-leg-curl': {
     name: 'Seated leg curl',
@@ -550,7 +740,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['lying-leg-curl', 'single-leg-curl'],
+    alternatives: ['lying-leg-curl', 'single-leg-curl', 'bridge-hamstring-slide'],
     cues: 'Control the negative.',
     howTo:
       'Sit in the seated leg curl machine with the thigh pad clamped down over your legs and ' +
@@ -568,7 +758,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['seated-leg-curl', 'single-leg-curl'],
+    alternatives: ['seated-leg-curl', 'single-leg-curl', 'bridge-hamstring-slide'],
     cues: 'Hips stay down on the pad, no lifting to finish the rep.',
     howTo:
       'Lie face down on the leg curl bench with the roller across the back of your lower calves' +
@@ -585,12 +775,31 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: true,
-    alternatives: ['seated-leg-curl', 'lying-leg-curl'],
+    alternatives: ['seated-leg-curl', 'lying-leg-curl', 'bridge-hamstring-slide'],
     cues: 'Useful for evening out the weaker side. Match reps, not weight.',
     howTo:
       'Either leg curl machine, one leg at a time, with the other foot resting out of the way. ' +
       'Curl the working heel in, pause, and lower slowly. This is mainly a tool for evening out' +
       ' a weaker side, so match the number of reps between sides rather than the weight.',
+  },
+  'bridge-hamstring-slide': {
+    name: 'Bridge hamstring slide',
+    type: 'strength',
+    equipment: 'bodyweight',
+    axialLoading: false,
+    defaults: { sets: 3, reps: 10, weight: null },
+    weightStep: null,
+    measure: 'reps',
+    perSide: false,
+    alternatives: ['seated-leg-curl', 'lying-leg-curl', 'single-leg-curl'],
+    cues: 'Hips stay up the whole set. Slide slow.',
+    howTo:
+      'Lie on your back with your knees bent and your heels resting on two small towels on a ' +
+      'smooth floor. Lift your hips into a bridge, then slide both heels slowly away from you ' +
+      'until your legs are nearly straight, and pull them back in without letting your hips ' +
+      'drop. You should feel it strongly in the hamstrings, at the back of the thighs. If your ' +
+      'hips sag or your lower back starts to arch, slide a shorter distance or lower down and ' +
+      'reset.',
   },
   'seated-db-shoulder-press': {
     name: 'Seated DB shoulder press',
@@ -601,7 +810,7 @@ export const EXERCISES = {
     weightStep: 2,
     measure: 'reps',
     perSide: false,
-    alternatives: ['cable-lateral-raise', 'machine-lateral-raise', 'face-pull'],
+    alternatives: ['cable-lateral-raise', 'machine-lateral-raise', 'face-pull', 'reverse-pec-deck'],
     cues: "Back against the pad, don't flare the ribs.",
     howTo:
       'Sit on a bench with the backrest set upright, a dumbbell in each hand at shoulder ' +
@@ -619,7 +828,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: true,
-    alternatives: ['machine-lateral-raise', 'face-pull'],
+    alternatives: ['machine-lateral-raise', 'face-pull', 'reverse-pec-deck'],
     cues: 'Pair it with face pulls to cover the whole shoulder. Light and strict.',
     howTo:
       'Stand side-on to a cable machine with the pulley set low, and take the handle in the ' +
@@ -636,7 +845,7 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['cable-lateral-raise', 'face-pull'],
+    alternatives: ['cable-lateral-raise', 'face-pull', 'reverse-pec-deck'],
     cues: 'Lead with the elbows, stop at shoulder height.',
     howTo:
       'Sit in the lateral raise machine with your upper arms against the pads and your torso ' +
@@ -653,7 +862,12 @@ export const EXERCISES = {
     weightStep: 5,
     measure: 'reps',
     perSide: false,
-    alternatives: ['cable-glute-kickback', 'banded-clamshells', 'side-lying-leg-raises'],
+    alternatives: [
+      'cable-glute-kickback',
+      'banded-clamshells',
+      'side-lying-leg-raises',
+      'glute-kickback-machine',
+    ],
     cues: 'Slow. Feel it in the side of the hip.',
     howTo:
       'Sit in the hip abduction machine, the one with pads on the outside of your knees, and ' +
@@ -670,7 +884,12 @@ export const EXERCISES = {
     weightStep: 2.5,
     measure: 'reps',
     perSide: true,
-    alternatives: ['hip-abduction-machine', 'banded-clamshells'],
+    alternatives: [
+      'glute-kickback-machine',
+      'db-hip-thrust',
+      'bw-glute-bridge',
+      'hip-abduction-machine',
+    ],
     cues: 'Stand tall. The leg moves, the lower back does not.',
     howTo:
       'Set a cable low and fasten an ankle strap around one ankle. Face the machine, hold the ' +
@@ -687,7 +906,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: true,
-    alternatives: ['side-lying-leg-raises', 'hip-abduction-machine'],
+    alternatives: ['side-lying-leg-raises', 'hip-abduction-machine', 'cable-glute-kickback'],
     cues: 'Feet together, knees open. Pelvis stays still.',
     howTo:
       'Lie on your side with a loop band around both thighs just above the knees, knees bent to' +
@@ -705,7 +924,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: true,
-    alternatives: ['banded-clamshells', 'hip-abduction-machine'],
+    alternatives: ['banded-clamshells', 'hip-abduction-machine', 'cable-glute-kickback'],
     cues: 'Lead with the heel, toe slightly down. Small range, honest work.',
     howTo:
       'Lie on your side with your legs straight and stacked, bottom arm under your head. Lift ' +
@@ -725,7 +944,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: false,
-    alternatives: ['dead-bug', 'bird-dog'],
+    alternatives: ['dead-bug', 'bird-dog', 'plank-shoulder-taps', 'bear-hold'],
     cues: 'Ribs down, glutes on, one straight line. Drop to the knees if the back complains.',
     howTo:
       'Lie face down, then prop yourself on your forearms with your elbows under your shoulders' +
@@ -743,7 +962,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: ['side-plank-knees', 'pallof-press'],
+    alternatives: ['side-plank-knees', 'pallof-press', 'dead-bug', 'suitcase-carry'],
     cues: 'A little extra on the weaker side is fine, pain-guided. Hips stacked and lifted.',
     howTo:
       'Lie on your side and prop yourself on the bottom forearm, elbow directly under the ' +
@@ -761,7 +980,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: ['side-plank', 'dead-bug'],
+    alternatives: ['side-plank', 'dead-bug', 'pallof-press', 'bird-dog'],
     cues: 'Knees bent takes most of the load off. Stop if anything sharpens.',
     howTo:
       'The same as the side plank, but with your knees bent and resting on the floor, so you ' +
@@ -778,7 +997,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: false,
-    alternatives: ['bird-dog', 'front-plank'],
+    alternatives: ['bird-dog', 'front-plank', 'bear-hold', 'plank-shoulder-taps'],
     cues: 'Lower back stays flat on the floor. Exhale as the limbs reach out.',
     howTo:
       'Lie on your back with your arms pointing at the ceiling and your hips and knees bent to ' +
@@ -796,13 +1015,73 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: true,
-    alternatives: ['dead-bug', 'front-plank'],
+    alternatives: ['dead-bug', 'front-plank', 'bear-hold', 'side-plank-knees'],
     cues: 'Slow, hips level, reach long not high.',
     howTo:
       'On your hands and knees, hands under your shoulders and knees under your hips. Reach one' +
       ' arm forward and the opposite leg back until both are roughly level with your body, hold' +
       ' for a moment, then return and switch sides. Reach long rather than high, and keep your ' +
       'hips level, as if you were balancing a glass of water on your lower back.',
+  },
+
+  'plank-shoulder-taps': {
+    name: 'Plank with shoulder taps',
+    type: 'core',
+    equipment: 'bodyweight',
+    axialLoading: false,
+    defaults: { sets: 2, reps: 10, weight: null },
+    weightStep: null,
+    measure: 'reps',
+    perSide: false,
+    alternatives: ['front-plank', 'bear-hold', 'dead-bug', 'bird-dog'],
+    cues: 'Hips dead still. Tap slowly, one hand at a time.',
+    howTo:
+      'Set up in a plank on your hands rather than your forearms, hands under your shoulders ' +
+      'and feet a little wider than usual for balance. Lift one hand and tap the opposite ' +
+      'shoulder, put it back down, then tap with the other hand, keeping your hips completely ' +
+      'still. You should feel your whole midsection working to stop your body from rocking. If ' +
+      'your hips swing or your lower back sags, widen your feet, slow down, or drop to your ' +
+      'knees.',
+  },
+  'bear-hold': {
+    name: 'Bear hold',
+    type: 'core',
+    equipment: 'bodyweight',
+    axialLoading: false,
+    defaults: { sets: 2, holdSec: 30 },
+    weightStep: null,
+    measure: 'hold',
+    perSide: false,
+    alternatives: ['front-plank', 'dead-bug', 'bird-dog', 'plank-shoulder-taps'],
+    cues: 'Knees hover a couple of centimeters. Ribs down, keep breathing.',
+    howTo:
+      'Start on your hands and knees, hands under your shoulders, knees under your hips, toes ' +
+      'tucked under. Press through your hands and toes to lift your knees just a couple of ' +
+      'centimeters off the floor, and hold there breathing normally. Your back stays flat, as ' +
+      'if a glass of water were balanced on it. Lifting the knees higher does not make it ' +
+      'better, and if your lower back starts to sag, set the knees down and rest.',
+  },
+  'suitcase-carry': {
+    name: 'Suitcase carry',
+    type: 'core',
+    equipment: 'dumbbell',
+    // Carrying a load while standing tall sends it down through the spine, so
+    // this is flagged even though it is one of the better anti-lean drills for
+    // a scoliotic back. Pallof press is first so the toggle lands on a cable.
+    axialLoading: true,
+    defaults: { sets: 3, holdSec: 30, weight: 12 },
+    weightStep: 2,
+    measure: 'hold',
+    perSide: true,
+    alternatives: ['pallof-press', 'side-plank', 'front-plank', 'dead-bug'],
+    cues: 'One dumbbell, one hand. Stand square and refuse to lean toward it.',
+    howTo:
+      'Pick up a single moderate dumbbell in one hand and let it hang at your side, then walk ' +
+      'slowly and normally for the length of the timer. Stand square: shoulders level, ribs ' +
+      'down, and no leaning away from or toward the weight. You should feel the side of your ' +
+      'torso opposite the dumbbell working hard to keep you upright. Then carry it in the ' +
+      'other hand. Start lighter than feels necessary, and if you cannot stop your torso ' +
+      'tipping, the weight is too heavy.',
   },
 
   /* ----------------------------------------------------------------- cardio */
@@ -852,7 +1131,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: [],
+    alternatives: ['seated-side-bend', 'ql-side-bend'],
     cues: 'Sink the hips back, walk the hands to each side, breathe into the tight side.',
     howTo:
       'Kneel on the floor, bring your big toes together, sit your hips back toward your heels, ' +
@@ -870,7 +1149,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: ['hip-flexor-couch'],
+    alternatives: ['hip-flexor-couch', 'hip-90-90'],
     cues: 'Back knee down is fine. Sink the hips, front knee tracks out.',
     howTo:
       'Start on your hands and knees. Step your right foot forward so it lands just outside ' +
@@ -889,7 +1168,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: ['figure-4-stretch'],
+    alternatives: ['figure-4-stretch', 'seated-glute-stretch'],
     cues: 'Tall chest over the front shin.',
     howTo:
       'Sit on the floor with your front leg bent to about 90 degrees with the shin across your ' +
@@ -907,7 +1186,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: ['hip-90-90'],
+    alternatives: ['seated-glute-stretch', 'hip-90-90'],
     cues: 'Lying down. Pull the leg in gently, head stays down.',
     howTo:
       'Lie on your back with both knees bent and your feet on the floor. Cross your right ankle' +
@@ -915,6 +1194,24 @@ export const EXERCISES = {
       ' the gap, hold behind your left thigh, and gently draw that leg toward your chest. Keep ' +
       'your head and shoulders resting on the floor. You should feel a broad stretch in the ' +
       'right glute: ease off if it pinches at the front of the hip. Then switch sides.',
+  },
+  'seated-glute-stretch': {
+    name: 'Seated figure-4 glute stretch',
+    type: 'stretch',
+    equipment: 'none',
+    axialLoading: false,
+    defaults: { sets: 1, holdSec: 45 },
+    weightStep: null,
+    measure: 'hold',
+    perSide: true,
+    alternatives: ['figure-4-stretch', 'hip-90-90'],
+    cues: 'Sit tall, ankle over the opposite knee, lean forward from the hips.',
+    howTo:
+      'Sit on a bench or a chair with both feet on the floor. Cross your right ankle over your ' +
+      'left knee so the right knee falls out to the side, then sit up tall and tip your chest ' +
+      'forward from the hips until you feel a stretch deep in the right glute. Keep your back ' +
+      'long rather than rounding over. This is the easy version of the lying figure-4, useful ' +
+      'when getting down to the floor does not appeal. Then switch sides.',
   },
   'hip-flexor-couch': {
     name: 'Hip flexor / couch stretch',
@@ -925,7 +1222,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: ['lizard-pose'],
+    alternatives: ['lizard-pose', 'standing-quad-stretch'],
     cues: 'Tuck the pelvis first, then shift forward slightly. Small motion, big stretch.',
     howTo:
       'Kneel on one knee with the other foot flat on the floor in front of you, back knee on a ' +
@@ -934,6 +1231,25 @@ export const EXERCISES = {
       'forward just a couple of centimeters. The tuck does most of the work, so a small motion ' +
       'already gives a strong stretch at the front of the kneeling hip. If you feel it as a ' +
       'pinch in your lower back, you have lost the tuck.',
+  },
+  'standing-quad-stretch': {
+    name: 'Standing quad stretch',
+    type: 'stretch',
+    equipment: 'none',
+    axialLoading: false,
+    defaults: { sets: 1, holdSec: 30 },
+    weightStep: null,
+    measure: 'hold',
+    perSide: true,
+    alternatives: ['hip-flexor-couch', 'lizard-pose'],
+    cues: 'Tuck the tailbone first. Knee points down, not back.',
+    howTo:
+      'Stand beside a wall or a machine frame and hold it with one hand for balance. Bend one ' +
+      'knee, take hold of that ankle behind you, and then tuck your tailbone under so your ' +
+      'lower back flattens before you draw the heel any closer. You should feel it down the ' +
+      'front of the thigh and across the front of the hip. Keep the bent knee pointing at the ' +
+      'floor rather than drifting backward, and if you feel a pinch in your lower back you ' +
+      'have lost the tuck.',
   },
   'hamstring-stretch': {
     name: 'Hamstring stretch',
@@ -944,7 +1260,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: [],
+    alternatives: ['seated-hamstring-stretch', 'figure-4-stretch'],
     cues: 'Strap or a ledge. Knee soft, hinge from the hip.',
     howTo:
       'Lie on your back with one knee bent and that foot on the floor. Loop a strap, belt, or ' +
@@ -952,6 +1268,25 @@ export const EXERCISES = {
       'stretch down the back of the thigh. Keep a soft bend in the raised knee and keep your ' +
       'head and lower back resting on the floor. If you prefer standing, put your heel on a low' +
       ' ledge and lean forward from the hips, not by rounding your back.',
+  },
+  'seated-hamstring-stretch': {
+    name: 'Seated hamstring stretch',
+    type: 'stretch',
+    equipment: 'none',
+    axialLoading: false,
+    defaults: { sets: 1, holdSec: 45 },
+    weightStep: null,
+    measure: 'hold',
+    perSide: true,
+    alternatives: ['hamstring-stretch', 'figure-4-stretch'],
+    cues: 'One heel out in front. Hinge from the hip with a long back.',
+    howTo:
+      'Sit on the edge of a bench and straighten one leg out in front of you, heel on the ' +
+      'floor and toes pointing up, with the other foot flat underneath you. Sit tall and tip ' +
+      'your chest forward from the hips until you feel a stretch down the back of the straight ' +
+      'leg. The movement comes from the hips while your back stays long, because rounding ' +
+      'forward moves the pull into your lower back, which is the part to protect. Then switch ' +
+      'sides.',
   },
   'open-book-rotation': {
     name: 'Open-book thoracic rotation',
@@ -962,7 +1297,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'reps',
     perSide: true,
-    alternatives: [],
+    alternatives: ['cat-camel', 'childs-pose-side-reach'],
     cues: 'Rotate from the mid-back, hips stacked and still.',
     howTo:
       'Lie on your side with your knees bent and stacked in front of you and both arms straight' +
@@ -980,7 +1315,7 @@ export const EXERCISES = {
     weightStep: null,
     measure: 'hold',
     perSide: true,
-    alternatives: [],
+    alternatives: ['seated-side-bend', 'childs-pose-side-reach'],
     cues: 'Gentle. This one sits near the painful area, so back off if it bites.',
     howTo:
       'Stand tall with your feet hip width apart. Reach one arm overhead and lean gently to the' +
@@ -988,6 +1323,25 @@ export const EXERCISES = {
       ' side of your torso just above the hip. Hold, come back up, then switch sides. This one ' +
       'sits right beside the sore area, so keep it small and gentle, and come out of it if it ' +
       'bites at all.',
+  },
+  'seated-side-bend': {
+    name: 'Seated side bend',
+    type: 'stretch',
+    equipment: 'none',
+    axialLoading: false,
+    defaults: { sets: 1, holdSec: 30 },
+    weightStep: null,
+    measure: 'hold',
+    perSide: true,
+    alternatives: ['ql-side-bend', 'childs-pose-side-reach'],
+    cues: 'Weight even on both hips. Reach up and over, small and gentle.',
+    howTo:
+      'Sit on a bench with both feet flat on the floor and your weight even on both hips. ' +
+      'Reach one arm up overhead and lean gently to the opposite side, letting the other hand ' +
+      'rest on the bench, until you feel a stretch along the side of your torso above the hip. ' +
+      'Sitting anchors your pelvis, so this is gentler and easier to control than the standing ' +
+      'version. Come back up slowly and switch sides, and back off if anything bites near the ' +
+      'sore spot.',
   },
 };
 
@@ -999,16 +1353,38 @@ export const EXERCISES = {
 export const PAIN_THRESHOLDS = { suggestPainVariant: 5, suggestStretchOnly: 8 };
 
 /** The rotating strength suggestions on a Cardio Focus day (ROUTINES.md §Cardio
- *  Focus step 2). The planner walks this list by session count so the same two
- *  do not come up every time. */
-export const CARDIO_FOCUS_STRENGTH_POOL = [
-  'leg-press',
-  'db-hip-thrust',
-  'seated-cable-row',
-  'chest-press',
-  'side-plank',
-  'pallof-press',
-];
+ *  Focus step 2).
+ *
+ *  Two pools, not one flat list, because these two slots are most of the week's
+ *  strength work: cardio-focus days are the ones actually being trained. The
+ *  planner takes slot 1 from `lower` and slot 2 from `upper`, each walked by
+ *  session count, so every session gets one lower-body pick and one upper-body
+ *  or core pick. A single list could serve up two leg exercises, or two planks,
+ *  and would never reach the lats at all.
+ *
+ *  The lengths are deliberately coprime-ish (6 and 7) so the pairings keep
+ *  changing rather than repeating every few sessions. Axial entries are fine
+ *  here: resolveWorkout substitutes them the same way it does anywhere else
+ *  when "skip axial loading" is on. */
+export const CARDIO_FOCUS_POOLS = {
+  lower: [
+    'leg-press',
+    'db-hip-thrust',
+    'seated-leg-curl',
+    'hip-abduction-machine',
+    'goblet-squat',
+    'single-leg-leg-press',
+  ],
+  upper: [
+    'chest-press',
+    'seated-cable-row',
+    'lat-pulldown',
+    'incline-db-press',
+    'machine-high-row',
+    'pallof-press',
+    'side-plank',
+  ],
+};
 
 /* --------------------------------------------------------- block factories */
 /* Fresh arrays each call so no two routines can share (and mutate) an object. */
@@ -1253,7 +1629,7 @@ export const ROUTINES = [
           movementPrep(),
           {
             title: 'Strength',
-            note: 'Two rotating suggestions. Swap either one freely.',
+            note: 'One rotating lower-body pick, one upper or core. Swap either freely.',
             items: [
               { slot: 'strength-rotation', sets: 3 },
               { slot: 'strength-rotation', sets: 3 },

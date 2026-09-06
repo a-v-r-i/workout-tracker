@@ -12,7 +12,7 @@
  * can never interrupt a live session.
  */
 
-const CACHE = 'wt-v2';
+const CACHE = 'wt-v3';
 
 const PRECACHE = [
   './',

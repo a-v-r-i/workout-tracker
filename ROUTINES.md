@@ -33,12 +33,12 @@ Default strength dose: 3 sets × 8-12 reps, ~90s rest. Progress by adding reps t
 
 | # | Exercise | Flags | Alternatives (back-safe swaps) | Cue |
 |---|---|---|---|---|
-| 1 | Leg press | | single-leg leg press · leg extension | Feet mid-platform, don't let the lower back round off the pad at depth |
-| 2 | Chest press (machine or DB bench) | | DB bench press · push-ups | Shoulder blades set, feet planted |
-| 3 | Seated cable row | | chest-supported machine row · single-arm DB row (hand on bench) | Tall neutral spine, pull to belly, no torso heave |
-| 4 | DB hip thrust / glute bridge | | bodyweight or single-leg glute bridge · glute kickback machine | Posterior tilt at top, squeeze glutes, ribs down — don't hyperextend the back |
-| 5 | Lat pulldown | | assisted pull-up machine · straight-arm pulldown | Slight lean OK, no lumbar arch-yank |
-| 6 | Cable Pallof press | | dead bug · bird dog | Resist rotation, breathe, hips square |
+| 1 | Leg press | | single-leg leg press · leg extension · wall sit · step-up onto a low box (⚠️) | Feet mid-platform, don't let the lower back round off the pad at depth |
+| 2 | Chest press (machine or DB bench) | | DB bench press · push-ups · pec deck · incline machine press | Shoulder blades set, feet planted |
+| 3 | Seated cable row | | chest-supported machine row · single-arm DB row (hand on bench) · machine high row · wide machine row | Tall neutral spine, pull to belly, no torso heave |
+| 4 | DB hip thrust / glute bridge | | bodyweight or single-leg glute bridge · glute kickback machine · cable glute kickback · bridge hamstring slide | Posterior tilt at top, squeeze glutes, ribs down, don't hyperextend the back |
+| 5 | Lat pulldown | | close-grip lat pulldown · assisted pull-up machine · straight-arm pulldown · machine high row | Slight lean OK, no lumbar arch-yank |
+| 6 | Cable Pallof press | | dead bug · bird dog · side plank · suitcase carry (⚠️) | Resist rotation, breathe, hips square |
 
 **Core (Day A pool, in order used by S/M/L):** front plank (30-45s) → bird dog ×8/side → Pallof press (if not done in strength).
 
@@ -46,14 +46,16 @@ Default strength dose: 3 sets × 8-12 reps, ~90s rest. Progress by adding reps t
 
 | # | Exercise | Flags | Alternatives | Cue |
 |---|---|---|---|---|
-| 1 | Goblet or guided (Smith) squat | ⚠️ axial | **leg press** · DB split squat (light DBs at sides) | Chest tall, sit between the hips, depth stays pain-free |
-| 2 | Incline DB press | | incline machine press · chest press machine | 30-45° incline, feet planted |
-| 3 | Seated row, wide grip | | wide machine row · face pull | Elbows high-ish, squeeze mid-back |
-| 4 | Seated or lying leg curl | | the other leg curl variant · single-leg curl | Control the negative |
-| 5 | Seated DB shoulder press (back supported) | ⚠️ axial | **cable lateral raise + face pull** · machine lateral raise | Back against pad, don't flare ribs |
-| 6 | Hip abduction machine | | cable glute kickback · banded clamshells · side-lying leg raises | Slow, feel it in the side of the hip |
+| 1 | Goblet or guided (Smith) squat | ⚠️ axial | **leg press** · single-leg leg press · leg extension · DB split squat (⚠️, light DBs at sides) | Chest tall, sit between the hips, depth stays pain-free |
+| 2 | Incline DB press | | incline machine press · chest press machine · DB bench press · pec deck | 30-45° incline, feet planted |
+| 3 | Seated row, wide grip | | wide machine row · face pull · reverse pec deck · machine high row | Elbows high-ish, squeeze mid-back |
+| 4 | Seated or lying leg curl | | the other leg curl variant · single-leg curl · bridge hamstring slide | Control the negative |
+| 5 | Seated DB shoulder press (back supported) | ⚠️ axial | **cable lateral raise** · machine lateral raise · face pull · reverse pec deck | Back against pad, don't flare ribs |
+| 6 | Hip abduction machine | | cable glute kickback · banded clamshells · side-lying leg raises · glute kickback machine | Slow, feel it in the side of the hip |
 
 **Core (Day B pool):** side planks 20-40s/side (slight extra volume on the weaker side, pain-guided) → dead bug ×10 → bird dog ×8/side.
+
+**Core swap bench:** every core piece also offers plank with shoulder taps, bear hold, and suitcase carry (⚠️ axial, but one of the better anti-lean drills for a scoliotic back) alongside the plank / dead bug / bird dog regulars.
 
 ### Cardio finisher
 
@@ -66,7 +68,11 @@ Bike or elliptical, any intensity that feels right (steady or intervals). Log du
 A first-class session for cardio-leaning days:
 
 1. Movement prep (3-4 min)
-2. **1-2 strength/core exercises × 3 sets** — the app rotates a suggestion from: leg press · DB hip thrust · seated cable row · chest press · side planks · Pallof press (any can be swapped)
+2. **Two strength/core exercises × 3 sets** — one lower-body pick and one upper-body or core pick, each rotating by how many cardio-focus sessions are already logged:
+   - **Lower pool:** leg press · DB hip thrust · seated leg curl · hip abduction machine · goblet squat (⚠️ axial) · single-leg leg press
+   - **Upper / core pool:** chest press · seated cable row · lat pulldown · incline DB press · machine high row · Pallof press · side plank
+
+   Either pick can be swapped, and the "skip axial loading" toggle substitutes the goblet squat like anywhere else. The two pools exist because most weeks are cardio-focus days, so these two slots carry the bulk of the strength work: a single flat list could serve up two leg exercises or two planks in the same session and never reach the lats. The pool lengths (6 and 7) are different on purpose, so the pairings keep shifting instead of repeating every few sessions.
 3. **30-45 min bike/elliptical** — steady or variable intervals, your call (intensity chips: easy / moderate / intervals / hard, optional kcal)
 4. 3-5 min hip mobility (lizard, 90/90, figure-4)
 
@@ -99,7 +105,9 @@ Timer-guided. **Full ~12-15 min** = all steps. **Short ~7 min** = steps marked �
 | 6 ● | Hip flexor / couch stretch | 45s/side | Tuck the pelvis first, then shift forward slightly — small motion, big stretch |
 | 7 | Hamstring stretch (strap or ledge) | 45s/side | Knee soft, hinge from the hip |
 | 8 | Open-book thoracic rotation | ×8/side | Rotate from the mid-back, hips stacked and still |
-| 9 | QL side-bend stretch | 30s/side | Gentle — this one targets near the painful area; back off if it bites |
+| 9 | QL side-bend stretch | 30s/side | Gentle: this one targets near the painful area, back off if it bites |
+
+Most of these have a swap too, mainly bench-and-standing versions for days when getting down onto the floor does not appeal: seated figure-4 for the lying figure-4 and 90/90, standing quad stretch for the couch stretch, seated hamstring stretch for the strap version, seated side bend for the QL side bend.
 
 **Optional core add-on** (their physio work — a home for non-gym days): dead bug ×10 → bird dog ×8/side → front plank 30-45s → side planks 20-40s/side.
 

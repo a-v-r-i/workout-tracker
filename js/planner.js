@@ -11,12 +11,7 @@
  * the block comment above resolveItem() before changing a field.
  */
 
-import {
-  EXERCISES,
-  ROUTINES,
-  PAIN_THRESHOLDS,
-  CARDIO_FOCUS_STRENGTH_POOL,
-} from '../data/routines.js';
+import { EXERCISES, ROUTINES, PAIN_THRESHOLDS, CARDIO_FOCUS_POOLS } from '../data/routines.js';
 
 /** Keys on a routine item that steer the planner rather than describe the set. */
 const CONTROL_KEYS = new Set(['ex', 'day', 'slot']);
@@ -255,8 +250,11 @@ export function resolveWorkout(routineId, variant, opts = {}) {
   const nextDay = opts.lastDayLabel === 'A' ? 'B' : 'A';
   const dayLabel = hasDaySplit ? nextDay : null;
 
-  // Cardio Focus rotates two suggestions out of the pool by session count.
+  // Cardio Focus rotates its two strength slots by session count: the first
+  // slot walks the lower-body pool, the second the upper-body/core pool, so a
+  // session can never serve up two leg exercises or two planks.
   const cfCount = Number(opts.cardioFocusCount) || 0;
+  const rotationPools = [CARDIO_FOCUS_POOLS.lower, CARDIO_FOCUS_POOLS.upper];
   let slotOrdinal = 0;
 
   const blocks = [];
@@ -267,9 +265,11 @@ export function resolveWorkout(routineId, variant, opts = {}) {
     for (const raw of kept) {
       let item = raw;
       if (raw.slot === 'strength-rotation') {
-        const poolIndex = (cfCount + slotOrdinal) % CARDIO_FOCUS_STRENGTH_POOL.length;
+        // Extra slots beyond the two defined ones fall back to the upper pool
+        // rather than crashing, but the routine only asks for two.
+        const pool = rotationPools[slotOrdinal] || CARDIO_FOCUS_POOLS.upper;
         slotOrdinal += 1;
-        item = Object.assign({}, raw, { ex: CARDIO_FOCUS_STRENGTH_POOL[poolIndex] });
+        item = Object.assign({}, raw, { ex: pool[cfCount % pool.length] });
       }
       const uid = 'b' + blocks.length + 'i' + items.length;
       const resolved = resolveItem(item, uid, ctx);
@@ -328,9 +328,35 @@ export function validateData() {
     }
   }
 
-  for (const poolId of CARDIO_FOCUS_STRENGTH_POOL) {
-    if (!EXERCISES[poolId]) {
-      problems.push(`CARDIO_FOCUS_STRENGTH_POOL: unknown exercise "${poolId}"`);
+  for (const [poolName, pool] of Object.entries(CARDIO_FOCUS_POOLS)) {
+    if (!Array.isArray(pool) || !pool.length) {
+      problems.push(`CARDIO_FOCUS_POOLS.${poolName}: empty or not an array`);
+      continue;
+    }
+    for (const poolId of pool) {
+      if (!EXERCISES[poolId]) {
+        problems.push(`CARDIO_FOCUS_POOLS.${poolName}: unknown exercise "${poolId}"`);
+      }
+    }
+  }
+
+  // Both rotation slots must still fill for every session count, including with
+  // axial substitution on: an axial pool entry whose substitute got dropped
+  // would silently shrink a Cardio Focus day from two lifts to one.
+  const cfCycle = Math.max(CARDIO_FOCUS_POOLS.lower.length, CARDIO_FOCUS_POOLS.upper.length);
+  for (let c = 0; c < cfCycle; c++) {
+    for (const noAxial of [false, true]) {
+      const w = resolveWorkout('cardio-focus', 'regular', {
+        exerciseState: {},
+        settings: { noAxialLoading: noAxial },
+        cardioFocusCount: c,
+      });
+      const strength = w && w.blocks.find((b) => b.title === 'Strength');
+      if (!strength || strength.items.length !== 2) {
+        problems.push(
+          `cardio-focus rotation (count ${c}, noAxial ${noAxial}): expected 2 strength items`
+        );
+      }
     }
   }
 
